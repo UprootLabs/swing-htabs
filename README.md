@@ -12,7 +12,7 @@ We couldn't find any existing libraries to achieve this, hence this project.
 
 ### Status
 The current status of this library is a *proof-of-concept*. We are using a little hack to indent the tab components
-in a custom JTabbedPane. It works fine in out tests, but we need more testing. Please see *contributing* section below.
+in a custom JTabbedPane. It works fine in our tests, but we need more testing. Please see the **contributing** section below.
 
 The Metal LAF has a small, known issue. The tabs in this LAF have a little notch that overlaps with the next tab, making
 it difficult to indent without looking odd. As a workaround we are indenting only the tab content.
@@ -23,7 +23,7 @@ The API will be stabilized after testing.
 We need more testing to complete this matrix:
 
 JRE v/s LAF                | Metal    | GTK2     | Nimbus   | Motif   | Windows | Windows Classic
------------------          | -------  | -------  | -------  | ------- | ------- | ---------------
+-----------------          | :-----:  | :-----:  | :-----:  | :-----: | :-----: | :-------------:
 Ubuntu + Oracle JVM 8u20   | ☑        | ☑        | ☑        | ☑       | -       | -
 Windows XP + Oracle JVM 7  | ☑        | -        | ☑        | ☑       | ☑       | ☑
 (TODO: Mac OSX, etc)       | -        | -        | -        | -       | -       | -
