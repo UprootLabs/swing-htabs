@@ -22,9 +22,10 @@ The API will be stabilized after testing.
 ### Contributing
 We need more testing to complete this matrix:
 
-JRE v/s LAF                | Metal    | GTK2     | Nimbus   | Motif   | Windows | Windows Classic
+JRE v/s LAF                | Metal    | GTK+     | Nimbus   | Motif   | Windows | Windows Classic
 -----------------          | :-----:  | :-----:  | :-----:  | :-----: | :-----: | :-------------:
-Ubuntu + Oracle JVM 8u20   | ☑        | ☑        | ☑        | ☑       | -       | -
+Oracle JRE 8 + Ubuntu14.x  | ☑        | ☑        | ☑        | ☑       | -       | -
+OpenJDK 7 + Ubuntu14.10    | ☑        | ☑        | ☑        | ☑       | -       | -
 Windows XP + Oracle JVM 7  | ☑        | -        | ☑        | ☑       | ☑       | ☑
 (TODO: Mac OSX, etc)       | -        | -        | -        | -       | -       | -
 
