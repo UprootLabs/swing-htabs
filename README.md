@@ -30,7 +30,7 @@ Windows XP + Oracle JVM 7  | ☑        | -        | ☑        | ☑       | �
 
 #### How to test
 Testing is easy; download the latest jar from the `releases` page. After running the jar file, you will
-see some randomly generated tabs, with the System LAF. Try swithching to other LAFs using the radio buttons
+see some randomly generated tabs, with the System LAF. Try switching to other LAFs using the radio buttons
 on the top. Append your report to [this issue](https://github.com/UprootLabs/swing-htabs/issues/1)
 
 ## Copyright and License
