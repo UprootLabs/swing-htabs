@@ -22,12 +22,13 @@ The API will be stabilized after testing.
 ### Contributing
 We need more testing to complete this matrix:
 
-JRE v/s LAF                | Metal    | GTK+     | Nimbus   | Motif   | Windows | Windows Classic
------------------          | :-----:  | :-----:  | :-----:  | :-----: | :-----: | :-------------:
-Oracle JRE 8 + Ubuntu14.x  | ☑        | ☑        | ☑        | ☑       | -       | -
-OpenJDK 7 + Ubuntu14.10    | ☑        | ☑        | ☑        | ☑       | -       | -
-Windows XP + Oracle JVM 7  | ☑        | -        | ☑        | ☑       | ☑       | ☑
-(TODO: Mac OSX, etc)       | -        | -        | -        | -       | -       | -
+JRE v/s LAF                  | Metal    | GTK+     | Nimbus   | Motif   | Windows | Windows Classic | MacOSX
+-----------------            | :-----:  | :-----:  | :-----:  | :-----: | :-----: | :-------------: | :-----: 
+Ubuntu14.x + OracleJRE8      | ☑        | ☑        | ☑        | ☑       | -       | -               | -       
+Ubuntu14.10 + OpenJDK7       | ☑        | ☑        | ☑        | ☑       | -       | -               | -       
+Windows XP + Oracle JVM 7    | ☑        | -        | ☑        | ☑       | ☑       | ☑               | -       
+MacOSX + OracleJRE8          | ☑        | -        | ☑        | ☑       | -       | -               | ☑       
+`TODO`: More Windows versions| -        | -        | -        | -       | -       | -               | -
 
 #### How to test
 Testing is easy; download the latest jar from the `releases` page. After running the jar file, you will
