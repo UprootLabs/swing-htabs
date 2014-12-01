@@ -24,6 +24,7 @@ package co.uproot.htabs.demo;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,6 +42,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -98,6 +100,10 @@ public class HTabsDemoApp {
     }
   }
 
+  private static void updateStatus(final JLabel statusLabel, final String statusText) {
+    statusLabel.setText("[Status] " + statusText);
+  }
+
   private static void createAndShowGUI(final int lafIndex) {
     final JFrame f = new JFrame("Tabbed Pane Demo");
     final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -116,8 +122,10 @@ public class HTabsDemoApp {
     final JPanel statusBar = new JPanel();
     statusBar.setLayout(new BorderLayout(20, 0));
 
-    final JLabel status = new JLabel("Status");
-    statusBar.add(status, BorderLayout.CENTER);
+    final JLabel status = new JLabel("[Status]");
+    status.setBorder(new EmptyBorder(4, 0, 4, 8));
+    status.setFont(status.getFont().deriveFont(Font.BOLD));
+    statusBar.add(status, BorderLayout.EAST);
 
     final JPanel topBar = new JPanel();
     topBar.setLayout(new BorderLayout());
@@ -129,7 +137,7 @@ public class HTabsDemoApp {
     newTabBtn.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
-        status.setText("New Tab Added");
+        updateStatus(status, "New tab added");
         tabManager.addTab("New Tab", new DummyIcon(), new JLabel("new top level tab"));
       }
     });
@@ -138,7 +146,7 @@ public class HTabsDemoApp {
     newSiblingBtn.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
-        status.setText("New Sibling Added");
+        updateStatus(status, "New sibling added");
         final Tab currTab = tabManager.getActiveTab();
         currTab.addSibling("New Sibling Tab", new DummyIcon(), null,
             new JLabel("new sibling added by " + currTab.getTabTitle()), null);
@@ -149,7 +157,7 @@ public class HTabsDemoApp {
     newChildBtn.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
-        status.setText("New Child Added");
+        updateStatus(status, "New child added");
         final Tab parent = tabManager.getActiveTab();
         final String title = "added by " + parent.getTabTitle();
         parent.addChild("New Child tab", new DummyIcon(), new JLabel("New Child Tab " + title), title);
@@ -193,7 +201,7 @@ public class HTabsDemoApp {
       public void stateChanged(final ChangeEvent e) {
         final Tab selectedTab = tabManager.getActiveTab();
         final String statusText = selectedTab == null ? "no more tabs" : selectedTab.getTabTitle();
-        status.setText(statusText);
+        updateStatus(status, statusText);
       }
     });
 
