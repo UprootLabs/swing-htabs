@@ -38,6 +38,7 @@ import java.awt.event.MouseListener;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.AbstractButton;
@@ -96,7 +97,7 @@ public class TabManager {
   }
 
   public Tab addTab(final String tabTitle, final Icon tabIcon, final Component tabComponent,
-      final Component tabContentPane, final String toolTip, final int index) {
+                    final Component tabContentPane, final String toolTip, final int index) {
     final Tab childTab = new Tab(tabTitle, tabIcon, tabComponent, tabContentPane, toolTip, null);
     this.tabs.add(childTab);
     int newIndex = index;
@@ -110,7 +111,7 @@ public class TabManager {
   }
 
   public Tab addTab(final String tabTitle, final Icon tabIcon, final Component tabComponent,
-      final Component tabContentPane, final String toolTip) {
+                    final Component tabContentPane, final String toolTip) {
     return addTab(tabTitle, tabIcon, tabComponent, tabContentPane, toolTip, -1);
   }
 
@@ -151,12 +152,33 @@ public class TabManager {
 
   public void setTabIndent(final int indent) {
     tabIndent = indent;
+    redraw();
+  }
+
+  public int getTabIndent(){
+    return tabIndent;
   }
 
   private int tabComponentIndent = INDENT;
 
   public void setTabComponentIndent(final int indent) {
     tabComponentIndent = indent;
+    redraw();
+  }
+
+  private void redraw() {
+    tabbedPane.revalidate();
+    tabbedPane.repaint();
+    for(final Tab tab: tabs){
+      tab.removeTabContentPane();
+    }
+
+    // todo use Google's Collection library to foreach through the original list in reversed order.
+    List<Tab> reversedTabs = new ArrayList<>(tabs);
+    Collections.reverse(reversedTabs);
+    for(final Tab tab: reversedTabs){
+      tab.addTabContentPane();
+    }
   }
 
   private int getTabIndent(final int tabLevel) {
@@ -314,7 +336,7 @@ public class TabManager {
       private Color rolloverColor = new Color(250, 50, 50, 200);
 
       CloseButton() {
-        final Dimension closeButtonDimension = new Dimension(CLOSE_BUTTON_SIZE +2*MARGIN_HORIZ, CLOSE_BUTTON_SIZE + 2*MARGIN_VERT);
+        final Dimension closeButtonDimension = new Dimension(CLOSE_BUTTON_SIZE + 2 * MARGIN_HORIZ, CLOSE_BUTTON_SIZE + 2 * MARGIN_VERT);
         setPreferredSize(closeButtonDimension);
         setMinimumSize(closeButtonDimension);
         setMaximumSize(closeButtonDimension);
@@ -378,12 +400,12 @@ public class TabManager {
         g2.setColor(crossColor);
         if (getModel().isRollover()) {
           g2.setColor(rolloverColor);
-          g2.fillRoundRect(0, 0, 2*MARGIN_HORIZ+CLOSE_BUTTON_SIZE, 2*MARGIN_VERT+CLOSE_BUTTON_SIZE, 5, 5);
+          g2.fillRoundRect(0, 0, 2 * MARGIN_HORIZ + CLOSE_BUTTON_SIZE, 2 * MARGIN_VERT + CLOSE_BUTTON_SIZE, 5, 5);
           g2.setColor(Color.WHITE);
         }
         g2.setStroke(new BasicStroke(1));
-        g2.drawLine(MARGIN_HORIZ, MARGIN_VERT, MARGIN_HORIZ+CLOSE_BUTTON_SIZE, MARGIN_VERT+CLOSE_BUTTON_SIZE);
-        g2.drawLine(MARGIN_HORIZ+CLOSE_BUTTON_SIZE, MARGIN_VERT, MARGIN_HORIZ, MARGIN_VERT+CLOSE_BUTTON_SIZE);
+        g2.drawLine(MARGIN_HORIZ, MARGIN_VERT, MARGIN_HORIZ + CLOSE_BUTTON_SIZE, MARGIN_VERT + CLOSE_BUTTON_SIZE);
+        g2.drawLine(MARGIN_HORIZ + CLOSE_BUTTON_SIZE, MARGIN_VERT, MARGIN_HORIZ, MARGIN_VERT + CLOSE_BUTTON_SIZE);
         g2.dispose();
       }
     }
@@ -653,7 +675,7 @@ public class TabManager {
         } else {
           final Insets borderInsets = tabComponent.getBorder().getBorderInsets(tabComponent);
           tabComponent.setBorder(BorderFactory.createEmptyBorder(borderInsets.top, borderInsets.left
-              - COLLAPSE_BUTTON_TOTAL_WIDTH, borderInsets.bottom, borderInsets.right));
+                  - COLLAPSE_BUTTON_TOTAL_WIDTH, borderInsets.bottom, borderInsets.right));
         }
         collapseButton.setVisible(true);
       }
@@ -664,13 +686,13 @@ public class TabManager {
       if (collapseButton.isVisible()) {
         final Insets borderInsets = tabComponent.getBorder().getBorderInsets(tabComponent);
         tabComponent.setBorder(BorderFactory.createEmptyBorder(borderInsets.top, borderInsets.left
-            + COLLAPSE_BUTTON_TOTAL_WIDTH, borderInsets.bottom, borderInsets.right));
+                + COLLAPSE_BUTTON_TOTAL_WIDTH, borderInsets.bottom, borderInsets.right));
         collapseButton.setVisible(false);
       }
     }
 
     public Tab addChild(final String tabTitle, final Icon tabIcon, final Component tabComponent,
-        final Component tabContentPane, final String toolTip) {
+                        final Component tabContentPane, final String toolTip) {
       final Tab childTab = new Tab(tabTitle, tabIcon, tabComponent, tabContentPane, toolTip, this);
       this.children.add(childTab);
       this.expandTab();
@@ -701,7 +723,7 @@ public class TabManager {
     }
 
     public void addSibling(final String tabTitle, final Icon tabIcon, final Component tabComponent, final Component tabContentPane,
-        final String toolTip) {
+                           final String toolTip) {
       if (this.parent == null) {
         addTab(tabTitle, tabIcon, tabComponent, tabContentPane, toolTip);
       } else {
@@ -777,6 +799,23 @@ public class TabManager {
         }
       }
       this.setCollapsed(true);
+    }
+
+    private void addTabContentPane() {
+      List<Tab> reversedChildren = new ArrayList<>(children);
+      // todo use Google's Collection library to foreach through the original list in reversed order.
+      Collections.reverse(reversedChildren);
+      for (final Tab child : reversedChildren) {
+        child.addTabContentPane();
+      }
+      addTab(Tab.this, 0);
+    }
+
+    private void removeTabContentPane() {
+      tabbedPane.remove(tabContentPane);
+      for (final Tab child : this.children) {
+        child.removeTabContentPane();
+      }
     }
 
   }
