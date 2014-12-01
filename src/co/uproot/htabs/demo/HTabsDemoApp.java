@@ -23,6 +23,7 @@ package co.uproot.htabs.demo;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -30,6 +31,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -138,7 +140,7 @@ public class HTabsDemoApp {
       @Override
       public void actionPerformed(final ActionEvent e) {
         updateStatus(status, "New tab added");
-        tabManager.addTab("New Tab", new DummyIcon(), new JLabel("new top level tab"));
+        tabManager.addTab("New Tab", new DummyIcon(), createTabContent("new top level tab"));
       }
     });
 
@@ -149,7 +151,7 @@ public class HTabsDemoApp {
         updateStatus(status, "New sibling added");
         final Tab currTab = tabManager.getActiveTab();
         currTab.addSibling("New Sibling Tab", new DummyIcon(), null,
-            new JLabel("new sibling added by " + currTab.getTabTitle()), null);
+            createTabContent("new sibling added by " + currTab.getTabTitle()), null);
       }
     });
 
@@ -160,7 +162,7 @@ public class HTabsDemoApp {
         updateStatus(status, "New child added");
         final Tab parent = tabManager.getActiveTab();
         final String title = "added by " + parent.getTabTitle();
-        parent.addChild("New Child tab", new DummyIcon(), new JLabel("New Child Tab " + title), title);
+        parent.addChild("New Child tab", new DummyIcon(), createTabContent("New Child Tab " + title), title);
       }
     });
 
@@ -189,10 +191,11 @@ public class HTabsDemoApp {
       final ColoredIcon icon = new ColoredIcon(color);
       final boolean root = random.nextDouble() > 0.7d;
       final int prevTab = random.nextInt(i+1);
+      final JPanel tabContent = createTabContent("<html><center>Content of tab<p><big><b>" + i + "</b></big></p></center></html>");
       if (root || prevTab == i) {
-        tabs[i] = tabManager.addTab("Tab " + i, icon, new JButton("Content of tab " + i));
+        tabs[i] = tabManager.addTab("Tab " + i, icon, tabContent);
       } else {
-        tabs[i] = tabs[prevTab].addChild("Tab " + i + " [child of " + prevTab + "]", icon, new JButton("Content of tab " + i));
+        tabs[i] = tabs[prevTab].addChild("Tab " + i + " [child of " + prevTab + "]", icon, tabContent);
       }
     }
 
@@ -210,6 +213,15 @@ public class HTabsDemoApp {
     f.add(tabbedPane, BorderLayout.CENTER);
 
     f.setVisible(true);
+  }
+
+  private static JPanel createTabContent(final String text) {
+    final JLabel label = new JLabel(text);
+    label.setHorizontalAlignment(JLabel.CENTER);
+    final JPanel wrapper = new JPanel();
+    wrapper.setLayout(new BorderLayout());
+    wrapper.add(label, BorderLayout.CENTER);
+    return wrapper;
   }
 
   private static void createLAFButtons(final int lafIndex, final JFrame f, final JPanel radioPanel) {
