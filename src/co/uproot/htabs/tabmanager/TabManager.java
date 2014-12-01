@@ -237,6 +237,8 @@ public class TabManager {
     private final CollapseButton collapseButton;
     private final Component tabComponent;
     private boolean collapsed;
+    private static final int MARGIN_VERT = 4;
+    private static final int MARGIN_LEFT = 8;
 
     public TabComponentWrappingContainer(final Component tabComponenet) {
       setLayout(new BorderLayout(MARGIN, 0));
@@ -246,12 +248,12 @@ public class TabManager {
       addAncestorListener(new AncestorListener() {
 
         private void helper(final AncestorEvent event) {
-          final int indent = getComponentIndent() + 4;
+          final int indent = getComponentIndent() + MARGIN_LEFT;
           final TabComponentWrappingContainer c = (TabComponentWrappingContainer) event.getSource();
           if (!c.getCollapseButton().isVisible()) {
-            setBorder(BorderFactory.createEmptyBorder(0, indent + COLLAPSE_BUTTON_TOTAL_WIDTH, 0, 0));
+            setBorder(BorderFactory.createEmptyBorder(MARGIN_VERT, indent + COLLAPSE_BUTTON_TOTAL_WIDTH, MARGIN_VERT, 0));
           } else {
-            setBorder(BorderFactory.createEmptyBorder(0, indent, 0, 0));
+            setBorder(BorderFactory.createEmptyBorder(MARGIN_VERT, indent, MARGIN_VERT, 0));
           }
           tabComponenet.setPreferredSize(new Dimension(TAB_BAR_WIDTH - indent, tabComponenet.getPreferredSize().height));
         }
