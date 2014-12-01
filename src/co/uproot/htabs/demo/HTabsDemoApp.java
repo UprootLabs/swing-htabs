@@ -114,7 +114,7 @@ public class HTabsDemoApp {
     f.setLayout(new BorderLayout());
 
     final JTabbedPane tabbedPane = new CustomTabbedPane(SwingConstants.LEFT);
-    final TabManager tabManager = new TabManager(tabbedPane, 300, 34, JTabbedPane.SCROLL_TAB_LAYOUT);
+    final TabManager tabManager = new TabManager(tabbedPane, 300, JTabbedPane.SCROLL_TAB_LAYOUT);
 
     final JPanel radioPanel = new JPanel();
     createLAFButtons(lafIndex, f, radioPanel);

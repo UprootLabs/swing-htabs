@@ -48,7 +48,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.border.Border;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.plaf.TabbedPaneUI;
@@ -68,7 +67,6 @@ public class TabManager {
 
   private static final int INDENT = 20;
   private final int TAB_BAR_WIDTH;
-  private final int TAB_HEIGHT;
   private static final int MARGIN = 5;
   private static final int COLLAPSE_BUTTON_WIDTH = 16;
   private static final int COLLAPSE_BUTTON_TOTAL_WIDTH = COLLAPSE_BUTTON_WIDTH + MARGIN;
@@ -76,11 +74,10 @@ public class TabManager {
   private final JTabbedPane tabbedPane;
   private final List<Tab> tabs = new ArrayList<>();
 
-  public TabManager(final JTabbedPane tabbedPane, final int tabBarWidth, final int tabHeight, final int tabLayoutPolicy) {
+  public TabManager(final JTabbedPane tabbedPane, final int tabBarWidth, final int tabLayoutPolicy) {
     this.tabbedPane = tabbedPane;
     this.tabbedPane.setTabLayoutPolicy(tabLayoutPolicy);
     this.TAB_BAR_WIDTH = tabBarWidth;
-    this.TAB_HEIGHT = tabHeight;
 
     final TabbedPaneUI tabUI = this.tabbedPane.getUI();
 
@@ -256,7 +253,7 @@ public class TabManager {
           } else {
             setBorder(BorderFactory.createEmptyBorder(0, indent, 0, 0));
           }
-          tabComponenet.setPreferredSize(new Dimension(TAB_BAR_WIDTH - indent, TAB_HEIGHT));
+          tabComponenet.setPreferredSize(new Dimension(TAB_BAR_WIDTH - indent, tabComponenet.getPreferredSize().height));
         }
 
         @Override
@@ -308,12 +305,13 @@ public class TabManager {
 
     private class CloseButton extends JButton {
       private static final long serialVersionUID = 1L;
-      private static final int CLOSE_BUTTON_WIDTH = 16;
-      private final Border margin = BorderFactory.createEmptyBorder(10, 1, 10, 1);
+      private static final int CLOSE_BUTTON_SIZE = 10;
+      private static final int MARGIN_VERT = 4;
+      private static final int MARGIN_HORIZ = 4;
+      private Color rolloverColor = new Color(250, 50, 50, 200);
 
       CloseButton() {
-        final Dimension closeButtonDimension = new Dimension(CLOSE_BUTTON_WIDTH, TAB_HEIGHT);
-        setBorder(margin);
+        final Dimension closeButtonDimension = new Dimension(CLOSE_BUTTON_SIZE +2*MARGIN_HORIZ, CLOSE_BUTTON_SIZE + 2*MARGIN_VERT);
         setPreferredSize(closeButtonDimension);
         setMinimumSize(closeButtonDimension);
         setMaximumSize(closeButtonDimension);
@@ -369,27 +367,31 @@ public class TabManager {
       protected void paintComponent(final Graphics g) {
         super.paintComponent(g);
         final Graphics2D g2 = (Graphics2D) g.create();
+        // TODO: This doesn't seem to make any visual difference
         if (getModel().isPressed()) {
           g2.translate(1, 1);
         }
-        g2.setStroke(new BasicStroke(2));
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(Color.GRAY);
         if (getModel().isRollover()) {
-          g2.setColor(Color.RED);
-          g2.fillRoundRect(0, 9, 16, 16, 5, 5);
+          g2.setColor(rolloverColor);
+          g2.fillRoundRect(0, 0, 2*MARGIN_HORIZ+CLOSE_BUTTON_SIZE, 2*MARGIN_VERT+CLOSE_BUTTON_SIZE, 5, 5);
           g2.setColor(Color.WHITE);
         }
-        g2.drawLine(4, 13, 12, 21);
-        g2.drawLine(4, 21, 12, 13);
+        g2.setStroke(new BasicStroke(2));
+        g2.drawLine(MARGIN_HORIZ, MARGIN_VERT, MARGIN_HORIZ+CLOSE_BUTTON_SIZE, MARGIN_VERT+CLOSE_BUTTON_SIZE);
+        g2.drawLine(MARGIN_HORIZ+CLOSE_BUTTON_SIZE, MARGIN_VERT, MARGIN_HORIZ, MARGIN_VERT+CLOSE_BUTTON_SIZE);
         g2.dispose();
       }
     }
 
     private class CollapseButton extends JButton {
       private static final long serialVersionUID = 1L;
+      private final GeneralPath collapsedPolygon = makePolygon(true);
+      private final GeneralPath normalPolygon = makePolygon(false);
 
       CollapseButton() {
-        final Dimension collapseButtomDimension = new Dimension(COLLAPSE_BUTTON_WIDTH, TAB_HEIGHT);
+        final Dimension collapseButtomDimension = new Dimension(COLLAPSE_BUTTON_WIDTH, COLLAPSE_BUTTON_WIDTH);
         setPreferredSize(collapseButtomDimension);
         setMinimumSize(collapseButtomDimension);
         setMaximumSize(collapseButtomDimension);
@@ -447,29 +449,31 @@ public class TabManager {
         final Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        if (getModel().isPressed()) {
-          g2.translate(1, 1);
-        }
         g2.setStroke(new BasicStroke(2));
         g2.setColor(Color.BLACK);
 
+        g2.fill(collapsed ? collapsedPolygon : normalPolygon);
+        g2.dispose();
+      }
+
+      private GeneralPath makePolygon(final boolean collapsed) {
         final ArrayList<Integer> xPoints = new ArrayList<>();
         final ArrayList<Integer> yPoints = new ArrayList<>();
 
         if (collapsed) {
-          xPoints.add(5);
-          xPoints.add(12);
-          xPoints.add(5);
-          yPoints.add(11);
-          yPoints.add(16);
-          yPoints.add(21);
+          xPoints.add(0);
+          xPoints.add(6);
+          xPoints.add(0);
+          yPoints.add(2);
+          yPoints.add(8);
+          yPoints.add(14);
         } else {
-          xPoints.add(2);
-          xPoints.add(7);
+          xPoints.add(0);
+          xPoints.add(6);
           xPoints.add(12);
-          yPoints.add(14);
-          yPoints.add(21);
-          yPoints.add(14);
+          yPoints.add(6);
+          yPoints.add(12);
+          yPoints.add(6);
         }
         final GeneralPath polygon = new GeneralPath(Path2D.WIND_EVEN_ODD, xPoints.size());
         polygon.moveTo(xPoints.get(0), yPoints.get(0));
@@ -479,8 +483,7 @@ public class TabManager {
         }
 
         polygon.closePath();
-        g2.fill(polygon);
-        g2.dispose();
+        return polygon;
       }
     }
   }
