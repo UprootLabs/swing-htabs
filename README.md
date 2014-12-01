@@ -3,7 +3,7 @@ swing-htabs
 
 Hierarchical tabs for Swing.
 
-![Screenshot of swing-htabs](https://gngr.info/media/img/misc/swing-htabs-0.0.png)
+![Screenshot of swing-htabs](http://i.imgur.com/V36Bjf6.gif)
 
 ### Background
 The Java Swing UI doesn't have support for creating hierarchical tabs (tabs that are shown as a tree).
