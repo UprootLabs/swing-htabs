@@ -23,7 +23,6 @@ package co.uproot.htabs.demo;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -31,22 +30,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import co.uproot.htabs.custom.tabbedpane.CustomTabbedPane;
 import co.uproot.htabs.demo.components.ColoredIcon;
@@ -65,7 +55,7 @@ public class HTabsDemoApp {
     swap(lafs, 0, systemLafIndex);
     systemLafIndex = 0;
     crossPlatformLafIndex = getLafIndex(UIManager.getCrossPlatformLookAndFeelClassName());
-    swap(lafs, lafs.length-1, crossPlatformLafIndex);
+    swap(lafs, lafs.length - 1, crossPlatformLafIndex);
     crossPlatformLafIndex = lafs.length - 1;
 
     updateLAF(systemLafIndex, null);
@@ -151,7 +141,7 @@ public class HTabsDemoApp {
         updateStatus(status, "New sibling added");
         final Tab currTab = tabManager.getActiveTab();
         currTab.addSibling("New Sibling Tab", new DummyIcon(), null,
-            createTabContent("new sibling added by " + currTab.getTabTitle()), null);
+                createTabContent("new sibling added by " + currTab.getTabTitle()), null);
       }
     });
 
@@ -170,18 +160,59 @@ public class HTabsDemoApp {
     newTabButtons.add(newSiblingBtn, BorderLayout.CENTER);
     newTabButtons.add(newChildBtn, BorderLayout.EAST);
 
-    topBar.add(radioPanel, BorderLayout.WEST);
+    final JPanel tabIndentPanel = new JPanel();
+    tabIndentPanel.setLayout(new BorderLayout());
+
+    final JLabel tabIndentLabel = new JLabel("Tab indent: ");
+
+    final JTextField tabIndentField = new JTextField(String.valueOf(tabManager.getTabComponentIndent()), 5);
+    tabIndentField.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e) {
+        update();
+      }
+
+      @Override
+      public void removeUpdate(DocumentEvent e) {
+        update();
+      }
+
+      @Override
+      public void changedUpdate(DocumentEvent e) {
+
+      }
+
+      private void update() {
+        try {
+          int indent = Integer.parseInt(tabIndentField.getText());
+          tabManager.setIndent(indent);
+        } catch (NumberFormatException e) {
+          // do nothing
+        }
+      }
+    });
+
+    tabIndentPanel.add(tabIndentLabel, BorderLayout.WEST);
+    tabIndentPanel.add(tabIndentField, BorderLayout.EAST);
+
+    final JPanel upperLeftPanel = new JPanel();
+    upperLeftPanel.setLayout(new BorderLayout());
+
+    upperLeftPanel.add(radioPanel, BorderLayout.NORTH);
+    upperLeftPanel.add(tabIndentPanel, BorderLayout.SOUTH);
+
+    topBar.add(upperLeftPanel, BorderLayout.WEST);
     topBar.add(newTabButtons, BorderLayout.EAST);
 
 
-    final Color colors[] = new Color[] {
-        new Color(10, 10, 10, 190),
-        new Color(10, 10, 250, 190),
-        new Color(250, 10, 250, 190),
-        new Color(250, 10, 10, 190),
-        new Color(10, 250, 10, 190),
-        new Color(10, 250, 250, 190),
-        new Color(90, 25, 250, 190),
+    final Color colors[] = new Color[]{
+            new Color(10, 10, 10, 190),
+            new Color(10, 10, 250, 190),
+            new Color(250, 10, 250, 190),
+            new Color(250, 10, 10, 190),
+            new Color(10, 250, 10, 190),
+            new Color(10, 250, 250, 190),
+            new Color(90, 25, 250, 190),
     };
     final int numTabs = 15;
     final Tab tabs[] = new Tab[numTabs];
@@ -190,7 +221,7 @@ public class HTabsDemoApp {
       final Color color = colors[i % colors.length];
       final ColoredIcon icon = new ColoredIcon(color);
       final boolean root = random.nextDouble() > 0.7d;
-      final int prevTab = random.nextInt(i+1);
+      final int prevTab = random.nextInt(i + 1);
       final JPanel tabContent = createTabContent("<html><center>Content of tab<p><big><b>" + i + "</b></big></p></center></html>");
       if (root || prevTab == i) {
         tabs[i] = tabManager.addTab("Tab " + i, icon, tabContent);
@@ -248,7 +279,9 @@ public class HTabsDemoApp {
     }
   }
 
-  /** Swaps the `i`th and `j`th elements of a */
+  /**
+   * Swaps the `i`th and `j`th elements of a
+   */
   public static <T> void swap(T[] a, final int i, final int j) {
     final T temp = a[i];
     a[i] = a[j];
