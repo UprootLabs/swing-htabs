@@ -41,14 +41,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.AbstractButton;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.Icon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.plaf.TabbedPaneUI;
@@ -152,17 +145,23 @@ public class TabManager {
 
   public void setTabIndent(final int indent) {
     tabIndent = indent;
-    redraw();
-  }
-
-  public int getTabIndent(){
-    return tabIndent;
   }
 
   private int tabComponentIndent = INDENT;
 
   public void setTabComponentIndent(final int indent) {
     tabComponentIndent = indent;
+  }
+
+  public int getTabComponentIndent(){
+    return tabComponentIndent;
+  }
+
+  public void setIndent(int indent){
+    if(! UIManager.getLookAndFeel().getID().equals("Metal")){
+      setTabIndent(indent);
+    }
+    setTabComponentIndent(indent);
     redraw();
   }
 

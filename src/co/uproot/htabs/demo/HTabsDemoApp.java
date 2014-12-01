@@ -23,7 +23,6 @@ package co.uproot.htabs.demo;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -33,13 +32,11 @@ import java.util.Random;
 
 import javax.swing.*;
 import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 
 import co.uproot.htabs.custom.tabbedpane.CustomTabbedPane;
 import co.uproot.htabs.demo.components.ColoredIcon;
@@ -168,7 +165,7 @@ public class HTabsDemoApp {
 
     final JLabel tabIndentLabel = new JLabel("Tab indent: ");
 
-    final JTextField tabIndentField = new JTextField(String.valueOf(tabManager.getTabIndent()), 5);
+    final JTextField tabIndentField = new JTextField(String.valueOf(tabManager.getTabComponentIndent()), 5);
     tabIndentField.getDocument().addDocumentListener(new DocumentListener() {
       @Override
       public void insertUpdate(DocumentEvent e) {
@@ -188,8 +185,7 @@ public class HTabsDemoApp {
       private void update() {
         try {
           int indent = Integer.parseInt(tabIndentField.getText());
-          tabManager.setTabIndent(indent);
-          tabManager.setTabComponentIndent(indent);
+          tabManager.setIndent(indent);
         } catch (NumberFormatException e) {
           // do nothing
         }
