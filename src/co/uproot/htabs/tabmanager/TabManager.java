@@ -305,9 +305,10 @@ public class TabManager {
 
     private class CloseButton extends JButton {
       private static final long serialVersionUID = 1L;
-      private static final int CLOSE_BUTTON_SIZE = 10;
+      private static final int CLOSE_BUTTON_SIZE = 8;
       private static final int MARGIN_VERT = 4;
       private static final int MARGIN_HORIZ = 4;
+      private final Color crossColor = new Color(100, 100, 100, 200);
       private Color rolloverColor = new Color(250, 50, 50, 200);
 
       CloseButton() {
@@ -372,13 +373,13 @@ public class TabManager {
           g2.translate(1, 1);
         }
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(Color.GRAY);
+        g2.setColor(crossColor);
         if (getModel().isRollover()) {
           g2.setColor(rolloverColor);
           g2.fillRoundRect(0, 0, 2*MARGIN_HORIZ+CLOSE_BUTTON_SIZE, 2*MARGIN_VERT+CLOSE_BUTTON_SIZE, 5, 5);
           g2.setColor(Color.WHITE);
         }
-        g2.setStroke(new BasicStroke(2));
+        g2.setStroke(new BasicStroke(1));
         g2.drawLine(MARGIN_HORIZ, MARGIN_VERT, MARGIN_HORIZ+CLOSE_BUTTON_SIZE, MARGIN_VERT+CLOSE_BUTTON_SIZE);
         g2.drawLine(MARGIN_HORIZ+CLOSE_BUTTON_SIZE, MARGIN_VERT, MARGIN_HORIZ, MARGIN_VERT+CLOSE_BUTTON_SIZE);
         g2.dispose();
