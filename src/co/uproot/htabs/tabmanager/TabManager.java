@@ -244,11 +244,11 @@ public class TabManager {
   public void setTabPlacement(final int tabPlacement) {
     tabbedPane.setTabPlacement(tabPlacement);
     if (tabPlacement == JTabbedPane.TOP) {
-      for (Tab tab : tabs) {
+      for (final Tab tab : tabs) {
         tab.expandTabTree();
       }
     } else if (tabPlacement == JTabbedPane.LEFT) {
-      for (Tab tab : tabs) {
+      for (final Tab tab : tabs) {
         tab.restoreTabHierarchy();
       }
     }
@@ -829,7 +829,7 @@ public class TabManager {
     }
 
     /**
-     * Expands the tab by adding the children from the specified index
+     * Expands the tab by adding the children from the specified index recursively.
      *
      * @param index
      *          index from where the child tabs need to be added.

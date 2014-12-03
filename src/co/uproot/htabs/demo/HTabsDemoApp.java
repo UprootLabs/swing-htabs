@@ -181,7 +181,7 @@ public class HTabsDemoApp {
     
     final JLabel tabPlacementLabel = new JLabel("Tab Placement: ");
 
-    String[] tabPlacements = { "Top", "Left" };
+    final String[] tabPlacements = { "Top", "Left" };
 
     final JComboBox tabPlacementList = new JComboBox(tabPlacements);
     tabPlacementList.setSelectedIndex(1);
