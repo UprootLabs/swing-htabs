@@ -30,7 +30,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
@@ -54,6 +53,7 @@ import javax.swing.plaf.TabbedPaneUI;
 import javax.swing.plaf.metal.MetalTabbedPaneUI;
 import javax.swing.plaf.synth.SynthTabbedPaneUI;
 
+import co.uproot.htabs.custom.custom.components.HideableComponentWrapper;
 import co.uproot.htabs.custom.tabbedpane.ui.CustomBasicTabbedPaneUI;
 import co.uproot.htabs.custom.tabbedpane.ui.CustomMetalTabbedPaneUI;
 import co.uproot.htabs.custom.tabbedpane.ui.CustomMotifTabbedPaneUI;
@@ -160,11 +160,13 @@ public class TabManager {
   }
 
   private int getTabIndent(final int tabLevel) {
-    return tabLevel * tabIndent;
+    final int placement = this.tabbedPane.getTabPlacement();
+    return ((placement == JTabbedPane.LEFT) || (placement == JTabbedPane.RIGHT)) ? tabLevel * tabIndent : 0;
   }
 
   private int getTabComponentIndent(final int tabLevel) {
-    return tabLevel * tabComponentIndent;
+    final int placement = this.tabbedPane.getTabPlacement();
+    return ((placement == JTabbedPane.LEFT) || (placement == JTabbedPane.RIGHT)) ? tabLevel * tabComponentIndent : 0;
   }
 
   private int getTabComponentIndent(final Component tabComponent) {
@@ -202,6 +204,10 @@ public class TabManager {
     return getTabFromTabContentPane(tabs, tabContentPane);
   }
 
+  public Tab getTabFromTabComponent(final Component tabComponent) {
+    return getTabFromTabComponent(tabs, tabComponent);
+  }
+
   private static Tab getTabFromTabContentPane(final List<Tab> tabs, final Component tabContentPane) {
     if (tabs != null) {
       for (final Tab t : tabs) {
@@ -219,14 +225,30 @@ public class TabManager {
   }
 
   public void computeTabIndents(final int tabCount, final Rectangle[] rects) {
-    for (int tabIndex = 0; tabIndex < tabCount; tabIndex++) {
-      final Component tabComponent = this.tabbedPane.getTabComponentAt(tabIndex);
-      final Tab tab = getTabFromTabComponent(tabs, tabComponent);
-      if (tab != null) {
-        final int tabIndent = getTabIndent(tab.tabLevel);
-        rects[tabIndex].x = tabIndent;
-        final int width = rects[tabIndex].width;
-        rects[tabIndex].width = width - tabIndent;
+    final int placement = tabbedPane.getTabPlacement();
+    if (placement == JTabbedPane.LEFT) {
+      for (int tabIndex = 0; tabIndex < tabCount; tabIndex++) {
+        final Component tabComponent = this.tabbedPane.getTabComponentAt(tabIndex);
+        final Tab tab = getTabFromTabComponent(tabs, tabComponent);
+        if (tab != null) {
+          final int tabIndent = getTabIndent(tab.tabLevel);
+          rects[tabIndex].x = tabIndent;
+          final int width = rects[tabIndex].width;
+          rects[tabIndex].width = width - tabIndent;
+        }
+      }
+    }
+  }
+
+  public void setTabPlacement(final int tabPlacement) {
+    tabbedPane.setTabPlacement(tabPlacement);
+    if (tabPlacement == JTabbedPane.TOP) {
+      for (final Tab tab : tabs) {
+        tab.expandTabTree();
+      }
+    } else if (tabPlacement == JTabbedPane.LEFT) {
+      for (final Tab tab : tabs) {
+        tab.restoreTabHierarchy();
       }
     }
   }
@@ -236,6 +258,7 @@ public class TabManager {
     private static final long serialVersionUID = 1L;
     private final CollapseButton collapseButton;
     private final Component tabComponent;
+    private final HideableComponentWrapper hideableComponentWraper;
     private boolean collapsed;
     private static final int MARGIN_VERT = 4;
     private static final int MARGIN_LEFT = 8;
@@ -243,6 +266,7 @@ public class TabManager {
     public TabComponentWrappingContainer(final Component tabComponenet) {
       setLayout(new BorderLayout(MARGIN, 0));
       this.collapseButton = new CollapseButton();
+      this.hideableComponentWraper = new HideableComponentWrapper(this.collapseButton, false);
       this.tabComponent = tabComponenet;
 
       addAncestorListener(new AncestorListener() {
@@ -250,7 +274,7 @@ public class TabManager {
         private void helper(final AncestorEvent event) {
           final int indent = getComponentIndent() + MARGIN_LEFT;
           final TabComponentWrappingContainer c = (TabComponentWrappingContainer) event.getSource();
-          if (!c.getCollapseButton().isVisible()) {
+          if ((!c.getHideableComponentWrapper().isVisible()) && tabbedPane.getTabPlacement() == JTabbedPane.LEFT) {
             setBorder(BorderFactory.createEmptyBorder(MARGIN_VERT, indent + COLLAPSE_BUTTON_TOTAL_WIDTH, MARGIN_VERT, 0));
           } else {
             setBorder(BorderFactory.createEmptyBorder(MARGIN_VERT, indent, MARGIN_VERT, 0));
@@ -274,10 +298,9 @@ public class TabManager {
         }
       });
       setOpaque(false);
-      add(this.collapseButton, BorderLayout.WEST);
+      add(this.hideableComponentWraper, BorderLayout.WEST);
       add(tabComponenet, BorderLayout.CENTER);
       add(new CloseButton(), BorderLayout.EAST);
-      this.collapseButton.setVisible(false);
     }
 
     public boolean isCollapsed() {
@@ -296,9 +319,45 @@ public class TabManager {
       return this.collapseButton;
     }
 
+    public Component getHideableComponentWrapper() {
+      return this.hideableComponentWraper;
+    }
+
+    public void showCollapseButton() {
+      final int placement = tabbedPane.getTabPlacement();
+      if (placement == JTabbedPane.LEFT) {
+        this.hideableComponentWraper.showComponent();
+      }
+    }
+
+    public void hideCollapseButton() {
+      final int placement = tabbedPane.getTabPlacement();
+      if (placement == JTabbedPane.LEFT) {
+        if (this.hideableComponentWraper.isComponentVisible()) {
+          this.hideableComponentWraper.hideComponent();
+        }
+      } else if (placement == JTabbedPane.TOP) {
+        if (this.hideableComponentWraper.isVisible()) {
+          this.hideableComponentWraper.setVisible(false);
+        }
+      }
+    }
+
     @Override
     public void setBounds(final int x, final int y, final int width, final int height) {
-      super.setBounds(0, y, width, height);
+      final int placement = tabbedPane.getTabPlacement();
+      if (placement == JTabbedPane.LEFT) {
+        final Tab tab = getTabFromTabComponent(this);
+        if (tab.getChildren().size() > 0) {
+          showCollapseButton();
+        } else {
+          this.hideableComponentWraper.setVisible(true);
+        }
+        super.setBounds(0, y, width, height);
+      } else if (placement == JTabbedPane.TOP) {
+        hideCollapseButton();
+        super.setBounds(x, y, width, height);
+      }
     }
 
     private int getComponentIndent() {
@@ -412,7 +471,7 @@ public class TabManager {
 
           @Override
           public void mouseClicked(final MouseEvent e) {
-            final Component tabComponent = getParent();
+            final Component tabComponent = getParent().getParent();
             final Tab tab = getTabFromTabComponent(tabs, tabComponent);
             if (tab.isCollapsed()) {
               tab.expandTab();
@@ -645,30 +704,6 @@ public class TabManager {
       return res;
     }
 
-    public void showCollapseButton() {
-      final JButton collapseButton = tabComponent.getCollapseButton();
-      if (!collapseButton.isVisible()) {
-        if (tabComponent.getBorder() == null) {
-          tabComponent.setBorder(BorderFactory.createEmptyBorder());
-        } else {
-          final Insets borderInsets = tabComponent.getBorder().getBorderInsets(tabComponent);
-          tabComponent.setBorder(BorderFactory.createEmptyBorder(borderInsets.top, borderInsets.left
-              - COLLAPSE_BUTTON_TOTAL_WIDTH, borderInsets.bottom, borderInsets.right));
-        }
-        collapseButton.setVisible(true);
-      }
-    }
-
-    public void hideCollapseButton() {
-      final JButton collapseButton = tabComponent.getCollapseButton();
-      if (collapseButton.isVisible()) {
-        final Insets borderInsets = tabComponent.getBorder().getBorderInsets(tabComponent);
-        tabComponent.setBorder(BorderFactory.createEmptyBorder(borderInsets.top, borderInsets.left
-            + COLLAPSE_BUTTON_TOTAL_WIDTH, borderInsets.bottom, borderInsets.right));
-        collapseButton.setVisible(false);
-      }
-    }
-
     public Tab addChild(final String tabTitle, final Icon tabIcon, final Component tabComponent,
         final Component tabContentPane, final String toolTip) {
       final Tab childTab = new Tab(tabTitle, tabIcon, tabComponent, tabContentPane, toolTip, this);
@@ -679,7 +714,7 @@ public class TabManager {
       tabbedPane.insertTab(tabTitle, tabIcon, tabContentPane, toolTip, childIndex);
       tabbedPane.setTabComponentAt(childIndex, childTab.tabComponent);
       if (this.children.size() > 0) {
-        showCollapseButton();
+        this.tabComponent.showCollapseButton();
       }
       return childTab;
     }
@@ -739,17 +774,16 @@ public class TabManager {
         this.updateParentOfChildren(newParent);
         newParent.children.addAll(this.children);
         newParent.updateChildrenLevels();
-        if (newParent.children.size() >= 1) {
-          newParent.showCollapseButton();
+        tabList.add(childIndex++, newParent);
+        if (newParent.children.size() > 0) {
+          newParent.tabComponent.showCollapseButton();
           newParent.expandTab();
         }
-        tabList.add(childIndex, newParent);
-        childIndex++;
       }
 
       tabList.remove(childIndex);
       if ((this.parent != null) && (this.parent.children.size() <= 0)) {
-        this.parent.hideCollapseButton();
+        this.parent.tabComponent.hideCollapseButton();
       }
     }
 
@@ -757,6 +791,10 @@ public class TabManager {
 
     }
 
+    /**
+     * Expands only the first level of tabs in the hierarchy of current tab.
+     * This expansion changes the state of the tab to expanded.
+     */
     public void expandTab() {
       if (this.isCollapsed()) {
         if (this.children != null) {
@@ -769,6 +807,53 @@ public class TabManager {
       }
     }
 
+    /**
+     * Expands the tab hierarchy recursively. This does not change the state of
+     * tab to expanded. This behavior is useful when the tab placement is
+     * changed from vertical to horizontal. In that case we are saving the
+     * previous state of the tab, so that it can be restored when the tab
+     * placement is changed back to vertical.
+     */
+    protected void expandTabTree() {
+      if (this.children != null) {
+        final int index = tabbedPane.indexOfTabComponent(this.tabComponent);
+        expandTabTreeHelper(index);
+      }
+    }
+
+    /**
+     * Expands the tab by adding the children from the specified index recursively.
+     *
+     * @param index
+     *          index from where the child tabs need to be added.
+     * @return index of the tab which was last added.
+     */
+    private int expandTabTreeHelper(int index) {
+      for (final Tab child : this.children) {
+        if (this.isCollapsed()) {
+          addTab(child, ++index);
+        } else {
+          index++;
+        }
+        index = child.expandTabTree(index);
+      }
+      return index;
+    }
+
+    /**
+     * Expands the tab hierarchy recursively.
+     *
+     * @param index
+     *          index from where the child tabs need to be added.
+     * @return index of the tab which was last added.
+     */
+    private int expandTabTree(int index) {
+      if (this.children != null) {
+        index = expandTabTreeHelper(index);
+      }
+      return index;
+    }
+
     public void collapseTab() {
       if (this.children != null) {
         for (final Tab child : this.children) {
@@ -777,6 +862,15 @@ public class TabManager {
         }
       }
       this.setCollapsed(true);
+    }
+
+    protected void restoreTabHierarchy() {
+      if (this.isCollapsed()) {
+        collapseTab();
+      }
+      for (final Tab t : this.children) {
+        t.restoreTabHierarchy();
+      }
     }
 
   }
