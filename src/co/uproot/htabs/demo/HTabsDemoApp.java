@@ -31,9 +31,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -170,7 +172,34 @@ public class HTabsDemoApp {
     newTabButtons.add(newSiblingBtn, BorderLayout.CENTER);
     newTabButtons.add(newChildBtn, BorderLayout.EAST);
 
+    final JPanel configButtons = new JPanel();
+    configButtons.setLayout(new BorderLayout());
+    configButtons.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+
+    final JPanel tabPlacementPanel = new JPanel();
+    tabPlacementPanel.setLayout(new BoxLayout(tabPlacementPanel, BoxLayout.X_AXIS));
+    
+    final JLabel tabPlacementLabel = new JLabel("Tab Placement: ");
+
+    final String[] tabPlacements = { "Top", "Left" };
+
+    final JComboBox tabPlacementList = new JComboBox(tabPlacements);
+    tabPlacementList.setSelectedIndex(1);
+    
+    tabPlacementList.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+        final int tabPlacement = tabPlacementList.getSelectedIndex() + 1;
+        tabManager.setTabPlacement(tabPlacement);
+      }
+    });
+    
+    tabPlacementPanel.add(tabPlacementLabel);
+    tabPlacementPanel.add(tabPlacementList);
+    configButtons.add(tabPlacementPanel, BorderLayout.CENTER);
+
     topBar.add(radioPanel, BorderLayout.WEST);
+    topBar.add(configButtons, BorderLayout.CENTER);
     topBar.add(newTabButtons, BorderLayout.EAST);
 
 
