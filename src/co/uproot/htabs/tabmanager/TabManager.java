@@ -38,6 +38,7 @@ import java.awt.event.MouseListener;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.AbstractButton;
@@ -171,6 +172,29 @@ public class TabManager {
     final Tab tab = getTabFromTabComponent(tabs, tabComponent);
     final int tabLevel = getTabLevel(tab);
     return getTabComponentIndent(tabLevel);
+  }
+  
+  public void setIndent(int indent){
+    if (!(tabbedPane.getUI() instanceof CustomMetalTabbedPaneUI)){
+      setTabIndent(indent);
+    }
+    setTabComponentIndent(indent);
+    redraw();
+  }
+
+  private void redraw() {
+    tabbedPane.revalidate();
+    tabbedPane.repaint();
+    for(final Tab tab: tabs){
+      tab.removeTabContentPane();
+    }
+
+    // TODO: use Google's Collection library to foreach through the original list in reversed order.
+    List<Tab> reversedTabs = new ArrayList<>(tabs);
+    Collections.reverse(reversedTabs);
+    for(final Tab tab: reversedTabs){
+      tab.addTabContentPane();
+    }
   }
 
   private static int getTabLevel(final Tab tab) {
@@ -778,7 +802,28 @@ public class TabManager {
       }
       this.setCollapsed(true);
     }
+    
+    private void addTabContentPane() {
+      List<Tab> reversedChildren = new ArrayList<>(children);
+      // TODO: use Google's Collection library to foreach through the original list in reversed order.
+      Collections.reverse(reversedChildren);
+      for (final Tab child : reversedChildren) {
+        child.addTabContentPane();
+      }
+      addTab(Tab.this, 0);
+    }
 
+    private void removeTabContentPane() {
+      tabbedPane.remove(tabContentPane);
+      for (final Tab child : this.children) {
+        child.removeTabContentPane();
+      }
+    }
+
+  }
+
+  public int getTabComponentIndent() {
+    return tabComponentIndent;
   }
 
 }
