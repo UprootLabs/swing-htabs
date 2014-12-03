@@ -798,6 +798,10 @@ public class TabManager {
 
     }
 
+    /**
+     * Expands only the first level of tabs in the hierarchy of current tab.
+     * This expansion changes the state of the tab to expanded.
+     */
     public void expandTab() {
       if (this.isCollapsed()) {
         if (this.children != null) {
@@ -810,13 +814,27 @@ public class TabManager {
       }
     }
 
+    /**
+     * Expands the tab hierarchy recursively. This does not change the state of
+     * tab to expanded. This behavior is useful when the tab placement is
+     * changed from vertical to horizontal. In that case we are saving the
+     * previous state of the tab, so that it can be restored when the tab
+     * placement is changed back to vertical.
+     */
     protected void expandTabTree() {
       if (this.children != null) {
-        int index = tabbedPane.indexOfTabComponent(this.tabComponent);
-        index = expandTabTreeHelper(index);
+        final int index = tabbedPane.indexOfTabComponent(this.tabComponent);
+        expandTabTreeHelper(index);
       }
     }
 
+    /**
+     * Expands the tab by adding the children from the specified index
+     *
+     * @param index
+     *          index from where the child tabs need to be added.
+     * @return index of the tab which was last added.
+     */
     private int expandTabTreeHelper(int index) {
       for (final Tab child : this.children) {
         if (this.isCollapsed()) {
@@ -829,6 +847,13 @@ public class TabManager {
       return index;
     }
 
+    /**
+     * Expands the tab hierarchy recursively.
+     *
+     * @param index
+     *          index from where the child tabs need to be added.
+     * @return index of the tab which was last added.
+     */
     private int expandTabTree(int index) {
       if (this.children != null) {
         index = expandTabTreeHelper(index);
