@@ -242,6 +242,7 @@ public class TabManager {
   }
 
   public void setTabPlacement(final int tabPlacement) {
+    tabbedPane.setTabPlacement(tabPlacement);
     if (tabPlacement == JTabbedPane.TOP) {
       for (Tab tab : tabs) {
         tab.expandTabTree();
@@ -251,7 +252,6 @@ public class TabManager {
         tab.restoreTabHierarchy();
       }
     }
-    tabbedPane.setTabPlacement(tabPlacement);
   }
 
   public class TabComponentWrappingContainer extends JPanel {
