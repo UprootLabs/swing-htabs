@@ -1,5 +1,6 @@
 swing-htabs
 ===========
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/UprootLabs/swing-htabs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Hierarchical tabs for Swing.
 
