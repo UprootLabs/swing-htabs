@@ -37,10 +37,6 @@ public class HideableComponentWrapper extends JPanel {
   final private static String EMPTY_COMPONENT = "emptyComponent";
   final private CardLayout cl;
 
-  final private JPanel emptyComponent;
-
-  private boolean componentVisible;
-
   /**
    * @param hideableComponent
    *          the component to be hidden
@@ -53,11 +49,11 @@ public class HideableComponentWrapper extends JPanel {
     this.setLayout(cl);
     setOpaque(false);
 
-    this.emptyComponent = new JPanel();
-    this.emptyComponent.setOpaque(false);
+    final JPanel emptyComponent = new JPanel();
+    emptyComponent.setOpaque(false);
 
     add(hideableComponent, HIDEABLE_COMPONENT);
-    add(this.emptyComponent, EMPTY_COMPONENT);
+    add(emptyComponent, EMPTY_COMPONENT);
 
     if (componentVisible) {
       this.showComponent();
@@ -79,31 +75,17 @@ public class HideableComponentWrapper extends JPanel {
   }
 
   /**
-   * @return the state of the hideableComponent, <code>true</code> if the
-   *         component is visible, <code>false</code> otherwise.
-   */
-  public boolean isComponentVisible() {
-    return this.componentVisible;
-  }
-
-  /**
    * Makes the hideableComponent invisible.
    */
   public void hideComponent() {
     cl.show(this, EMPTY_COMPONENT);
-    this.componentVisible = true;
   }
 
   /**
-   * Makes the hideableComponent visible, and calls
-   * <code>setVisible(true)</code> if calling <code>isVisible()</code> on the
-   * wrapper returns <code>false</code>.
+   * Makes the hideableComponent visible.
    */
   public void showComponent() {
     cl.show(this, HIDEABLE_COMPONENT);
-    this.componentVisible = true;
-    if (!this.isVisible()) {
-      this.setVisible(true);
-    }
+    this.setVisible(true);
   }
 }

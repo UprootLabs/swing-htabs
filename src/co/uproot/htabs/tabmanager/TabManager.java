@@ -333,13 +333,9 @@ public class TabManager {
     public void hideCollapseButton() {
       final int placement = tabbedPane.getTabPlacement();
       if (placement == JTabbedPane.LEFT) {
-        if (this.hideableComponentWraper.isComponentVisible()) {
-          this.hideableComponentWraper.hideComponent();
-        }
+        this.hideableComponentWraper.hideComponent();
       } else if (placement == JTabbedPane.TOP) {
-        if (this.hideableComponentWraper.isVisible()) {
-          this.hideableComponentWraper.setVisible(false);
-        }
+        this.hideableComponentWraper.setVisible(false);
       }
     }
 
