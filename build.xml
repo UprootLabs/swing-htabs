@@ -1,0 +1,29 @@
+<project>
+  <target name="clean">
+    <delete dir="build"/>
+  </target>
+
+  <target name="compile">
+    <mkdir dir="build/classes"/>
+    <javac srcdir="src" destdir="build/classes" includeantruntime="false">
+      <compilerarg value="-Xlint:all,-serial"/>
+    </javac>
+  </target>
+
+  <target name="jar" depends="compile">
+    <mkdir dir="build/jar"/>
+    <jar destfile="build/jar/swing-htabs.jar" basedir="build/classes">
+      <manifest>
+        <attribute name="Main-Class" value="co.uproot.htabs.demo.HTabsDemoApp"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="run" depends="jar">
+    <java jar="build/jar/swing-htabs.jar" fork="true"/>
+  </target>
+
+  <target name="test" depends="jar">
+  </target>
+
+</project>
