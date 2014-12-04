@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 /*
  * Dummy Icon used for the demo application
@@ -47,7 +47,7 @@ public class ColoredIcon implements Icon {
     g2d.fillOval(0, 0, width, height);
 
     g2d.setColor(color);
-    g2d.fillOval(3, 3, width-6, height-6);
+    g2d.fillOval(3, 3, width - 6, height - 6);
 
     g2d.dispose();
   }

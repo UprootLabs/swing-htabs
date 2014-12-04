@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 /*
  * An demo application to demonstrate the usage of the htabs library.
@@ -23,7 +23,6 @@ package co.uproot.htabs.demo;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -67,7 +66,7 @@ public class HTabsDemoApp {
     swap(lafs, 0, systemLafIndex);
     systemLafIndex = 0;
     crossPlatformLafIndex = getLafIndex(UIManager.getCrossPlatformLookAndFeelClassName());
-    swap(lafs, lafs.length-1, crossPlatformLafIndex);
+    swap(lafs, lafs.length - 1, crossPlatformLafIndex);
     crossPlatformLafIndex = lafs.length - 1;
 
     updateLAF(systemLafIndex, null);
@@ -178,14 +177,14 @@ public class HTabsDemoApp {
 
     final JPanel tabPlacementPanel = new JPanel();
     tabPlacementPanel.setLayout(new BoxLayout(tabPlacementPanel, BoxLayout.X_AXIS));
-    
+
     final JLabel tabPlacementLabel = new JLabel("Tab Placement: ");
 
     final String[] tabPlacements = { "Top", "Left" };
 
     final JComboBox tabPlacementList = new JComboBox(tabPlacements);
     tabPlacementList.setSelectedIndex(1);
-    
+
     tabPlacementList.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
@@ -193,7 +192,7 @@ public class HTabsDemoApp {
         tabManager.setTabPlacement(tabPlacement);
       }
     });
-    
+
     tabPlacementPanel.add(tabPlacementLabel);
     tabPlacementPanel.add(tabPlacementList);
     configButtons.add(tabPlacementPanel, BorderLayout.CENTER);
@@ -201,7 +200,6 @@ public class HTabsDemoApp {
     topBar.add(radioPanel, BorderLayout.WEST);
     topBar.add(configButtons, BorderLayout.CENTER);
     topBar.add(newTabButtons, BorderLayout.EAST);
-
 
     final Color colors[] = new Color[] {
         new Color(10, 10, 10, 190),
@@ -219,9 +217,9 @@ public class HTabsDemoApp {
       final Color color = colors[i % colors.length];
       final ColoredIcon icon = new ColoredIcon(color);
       final boolean root = random.nextDouble() > 0.7d;
-      final int prevTab = random.nextInt(i+1);
+      final int prevTab = random.nextInt(i + 1);
       final JPanel tabContent = createTabContent("<html><center>Content of tab<p><big><b>" + i + "</b></big></p></center></html>");
-      if (root || prevTab == i) {
+      if (root || (prevTab == i)) {
         tabs[i] = tabManager.addTab("Tab " + i, icon, tabContent);
       } else {
         tabs[i] = tabs[prevTab].addChild("Tab " + i + " [child of " + prevTab + "]", icon, tabContent);
@@ -246,7 +244,7 @@ public class HTabsDemoApp {
 
   private static JPanel createTabContent(final String text) {
     final JLabel label = new JLabel(text);
-    label.setHorizontalAlignment(JLabel.CENTER);
+    label.setHorizontalAlignment(SwingConstants.CENTER);
     final JPanel wrapper = new JPanel();
     wrapper.setLayout(new BorderLayout());
     wrapper.add(label, BorderLayout.CENTER);
@@ -268,7 +266,7 @@ public class HTabsDemoApp {
       }
       lafButton.addActionListener(new ActionListener() {
         @Override
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(final ActionEvent e) {
           updateLAF(index, f);
         }
       });
@@ -278,7 +276,7 @@ public class HTabsDemoApp {
   }
 
   /** Swaps the `i`th and `j`th elements of a */
-  public static <T> void swap(T[] a, final int i, final int j) {
+  public static <T> void swap(final T[] a, final int i, final int j) {
     final T temp = a[i];
     a[i] = a[j];
     a[j] = temp;

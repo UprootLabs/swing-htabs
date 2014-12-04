@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 /*
  * Manages the tabs in an hierarchical manner.
@@ -47,6 +47,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.plaf.TabbedPaneUI;
@@ -161,12 +162,12 @@ public class TabManager {
 
   private int getTabIndent(final int tabLevel) {
     final int placement = this.tabbedPane.getTabPlacement();
-    return ((placement == JTabbedPane.LEFT) || (placement == JTabbedPane.RIGHT)) ? tabLevel * tabIndent : 0;
+    return ((placement == SwingConstants.LEFT) || (placement == SwingConstants.RIGHT)) ? tabLevel * tabIndent : 0;
   }
 
   private int getTabComponentIndent(final int tabLevel) {
     final int placement = this.tabbedPane.getTabPlacement();
-    return ((placement == JTabbedPane.LEFT) || (placement == JTabbedPane.RIGHT)) ? tabLevel * tabComponentIndent : 0;
+    return ((placement == SwingConstants.LEFT) || (placement == SwingConstants.RIGHT)) ? tabLevel * tabComponentIndent : 0;
   }
 
   private int getTabComponentIndent(final Component tabComponent) {
@@ -226,7 +227,7 @@ public class TabManager {
 
   public void computeTabIndents(final int tabCount, final Rectangle[] rects) {
     final int placement = tabbedPane.getTabPlacement();
-    if (placement == JTabbedPane.LEFT) {
+    if (placement == SwingConstants.LEFT) {
       for (int tabIndex = 0; tabIndex < tabCount; tabIndex++) {
         final Component tabComponent = this.tabbedPane.getTabComponentAt(tabIndex);
         final Tab tab = getTabFromTabComponent(tabs, tabComponent);
@@ -242,11 +243,11 @@ public class TabManager {
 
   public void setTabPlacement(final int tabPlacement) {
     tabbedPane.setTabPlacement(tabPlacement);
-    if (tabPlacement == JTabbedPane.TOP) {
+    if (tabPlacement == SwingConstants.TOP) {
       for (final Tab tab : tabs) {
         tab.expandTabTree();
       }
-    } else if (tabPlacement == JTabbedPane.LEFT) {
+    } else if (tabPlacement == SwingConstants.LEFT) {
       for (final Tab tab : tabs) {
         tab.restoreTabHierarchy();
       }
@@ -274,7 +275,7 @@ public class TabManager {
         private void helper(final AncestorEvent event) {
           final int indent = getComponentIndent() + MARGIN_LEFT;
           final TabComponentWrappingContainer c = (TabComponentWrappingContainer) event.getSource();
-          if ((!c.getHideableComponentWrapper().isVisible()) && tabbedPane.getTabPlacement() == JTabbedPane.LEFT) {
+          if ((!c.getHideableComponentWrapper().isVisible()) && (tabbedPane.getTabPlacement() == SwingConstants.LEFT)) {
             setBorder(BorderFactory.createEmptyBorder(MARGIN_VERT, indent + COLLAPSE_BUTTON_TOTAL_WIDTH, MARGIN_VERT, 0));
           } else {
             setBorder(BorderFactory.createEmptyBorder(MARGIN_VERT, indent, MARGIN_VERT, 0));
@@ -325,16 +326,16 @@ public class TabManager {
 
     public void showCollapseButton() {
       final int placement = tabbedPane.getTabPlacement();
-      if (placement == JTabbedPane.LEFT) {
+      if (placement == SwingConstants.LEFT) {
         this.hideableComponentWraper.showComponent();
       }
     }
 
     public void hideCollapseButton() {
       final int placement = tabbedPane.getTabPlacement();
-      if (placement == JTabbedPane.LEFT) {
+      if (placement == SwingConstants.LEFT) {
         this.hideableComponentWraper.hideComponent();
-      } else if (placement == JTabbedPane.TOP) {
+      } else if (placement == SwingConstants.TOP) {
         this.hideableComponentWraper.setVisible(false);
       }
     }
@@ -342,7 +343,7 @@ public class TabManager {
     @Override
     public void setBounds(final int x, final int y, final int width, final int height) {
       final int placement = tabbedPane.getTabPlacement();
-      if (placement == JTabbedPane.LEFT) {
+      if (placement == SwingConstants.LEFT) {
         final Tab tab = getTabFromTabComponent(this);
         if (tab.getChildren().size() > 0) {
           showCollapseButton();
@@ -350,7 +351,7 @@ public class TabManager {
           this.hideableComponentWraper.setVisible(true);
         }
         super.setBounds(0, y, width, height);
-      } else if (placement == JTabbedPane.TOP) {
+      } else if (placement == SwingConstants.TOP) {
         hideCollapseButton();
         super.setBounds(x, y, width, height);
       }
@@ -366,10 +367,10 @@ public class TabManager {
       private static final int MARGIN_VERT = 4;
       private static final int MARGIN_HORIZ = 4;
       private final Color crossColor = new Color(100, 100, 100, 200);
-      private Color rolloverColor = new Color(250, 50, 50, 200);
+      private final Color rolloverColor = new Color(250, 50, 50, 200);
 
       CloseButton() {
-        final Dimension closeButtonDimension = new Dimension(CLOSE_BUTTON_SIZE +2*MARGIN_HORIZ, CLOSE_BUTTON_SIZE + 2*MARGIN_VERT);
+        final Dimension closeButtonDimension = new Dimension(CLOSE_BUTTON_SIZE + (2 * MARGIN_HORIZ), CLOSE_BUTTON_SIZE + (2 * MARGIN_VERT));
         setPreferredSize(closeButtonDimension);
         setMinimumSize(closeButtonDimension);
         setMaximumSize(closeButtonDimension);
@@ -433,12 +434,12 @@ public class TabManager {
         g2.setColor(crossColor);
         if (getModel().isRollover()) {
           g2.setColor(rolloverColor);
-          g2.fillRoundRect(0, 0, 2*MARGIN_HORIZ+CLOSE_BUTTON_SIZE, 2*MARGIN_VERT+CLOSE_BUTTON_SIZE, 5, 5);
+          g2.fillRoundRect(0, 0, (2 * MARGIN_HORIZ) + CLOSE_BUTTON_SIZE, (2 * MARGIN_VERT) + CLOSE_BUTTON_SIZE, 5, 5);
           g2.setColor(Color.WHITE);
         }
         g2.setStroke(new BasicStroke(1));
-        g2.drawLine(MARGIN_HORIZ, MARGIN_VERT, MARGIN_HORIZ+CLOSE_BUTTON_SIZE, MARGIN_VERT+CLOSE_BUTTON_SIZE);
-        g2.drawLine(MARGIN_HORIZ+CLOSE_BUTTON_SIZE, MARGIN_VERT, MARGIN_HORIZ, MARGIN_VERT+CLOSE_BUTTON_SIZE);
+        g2.drawLine(MARGIN_HORIZ, MARGIN_VERT, MARGIN_HORIZ + CLOSE_BUTTON_SIZE, MARGIN_VERT + CLOSE_BUTTON_SIZE);
+        g2.drawLine(MARGIN_HORIZ + CLOSE_BUTTON_SIZE, MARGIN_VERT, MARGIN_HORIZ, MARGIN_VERT + CLOSE_BUTTON_SIZE);
         g2.dispose();
       }
     }
@@ -673,9 +674,7 @@ public class TabManager {
     }
 
     public void setCollapsed(final boolean collapsed) {
-      if (this.tabComponent instanceof TabComponentWrappingContainer) {
-        this.tabComponent.setCollapsed(collapsed);
-      }
+      this.tabComponent.setCollapsed(collapsed);
       this.collapsed = collapsed;
     }
 
@@ -818,7 +817,8 @@ public class TabManager {
     }
 
     /**
-     * Expands the tab by adding the children from the specified index recursively.
+     * Expands the tab by adding the children from the specified index
+     * recursively.
      *
      * @param index
      *          index from where the child tabs need to be added.
