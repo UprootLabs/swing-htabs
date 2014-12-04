@@ -674,9 +674,7 @@ public class TabManager {
     }
 
     public void setCollapsed(final boolean collapsed) {
-      if (this.tabComponent instanceof TabComponentWrappingContainer) {
-        this.tabComponent.setCollapsed(collapsed);
-      }
+      this.tabComponent.setCollapsed(collapsed);
       this.collapsed = collapsed;
     }
 
