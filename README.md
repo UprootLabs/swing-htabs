@@ -1,4 +1,6 @@
-swing-htabs [![Gitter](https://badges.gitter.im/UprootLabs/swing-htabs.png)](https://gitter.im/UprootLabs/swing-htabs?utm_source=badge)
+swing-htabs
+[![Gitter](https://badges.gitter.im/UprootLabs/swing-htabs.png)](https://gitter.im/UprootLabs/swing-htabs?utm_source=badge)
+[![Build Status](https://travis-ci.org/UprootLabs/swing-htabs.svg?branch=master)](https://travis-ci.org/UprootLabs/swing-htabs)
 ===========
 
 Hierarchical tabs for Swing.
