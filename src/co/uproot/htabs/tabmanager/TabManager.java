@@ -52,7 +52,7 @@ import javax.swing.plaf.TabbedPaneUI;
 import javax.swing.plaf.metal.MetalTabbedPaneUI;
 import javax.swing.plaf.synth.SynthTabbedPaneUI;
 
-import co.uproot.htabs.custom.custom.components.HideableComponentWrapper;
+import co.uproot.htabs.custom.components.HideableComponentWrapper;
 import co.uproot.htabs.custom.tabbedpane.ui.CustomBasicTabbedPaneUI;
 import co.uproot.htabs.custom.tabbedpane.ui.CustomMetalTabbedPaneUI;
 import co.uproot.htabs.custom.tabbedpane.ui.CustomMotifTabbedPaneUI;
