@@ -276,13 +276,18 @@ public class TabManager {
 
         private void helper(final AncestorEvent event) {
           final int indent = getComponentIndent() + MARGIN_LEFT;
+          final int tabPlacement = tabbedPane.getTabPlacement();
           final TabComponentWrappingContainer c = (TabComponentWrappingContainer) event.getSource();
           if ((!c.getHideableComponentWrapper().isVisible()) && (tabbedPane.getTabPlacement() == SwingConstants.LEFT)) {
             setBorder(BorderFactory.createEmptyBorder(MARGIN_VERT, indent + COLLAPSE_BUTTON_TOTAL_WIDTH, MARGIN_VERT, 0));
           } else {
             setBorder(BorderFactory.createEmptyBorder(MARGIN_VERT, indent, MARGIN_VERT, 0));
           }
-          component.setPreferredSize(new Dimension(TAB_BAR_WIDTH - indent, component.getPreferredSize().height));
+          if ((tabPlacement == SwingConstants.LEFT) || (tabPlacement == SwingConstants.RIGHT)) {
+            component.setPreferredSize(new Dimension(TAB_BAR_WIDTH - indent, component.getPreferredSize().height));
+          } else {
+            component.setPreferredSize(null);
+          }
         }
 
         @Override
@@ -322,8 +327,11 @@ public class TabManager {
       remove(wrappedComponent);
       wrappedComponent = component;
       add(wrappedComponent, BorderLayout.CENTER);
-      final int indent = getComponentIndent() + MARGIN_LEFT;
-      wrappedComponent.setPreferredSize(new Dimension(TAB_BAR_WIDTH - indent, component.getPreferredSize().height));
+      final int tabPlacement = tabbedPane.getTabPlacement();
+      if (tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT) {
+        final int indent = getComponentIndent() + MARGIN_LEFT;
+        wrappedComponent.setPreferredSize(new Dimension(TAB_BAR_WIDTH - indent, component.getPreferredSize().height));
+      }
       repaint();
     }
 
