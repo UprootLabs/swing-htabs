@@ -28,7 +28,7 @@ Ubuntu14.x + OracleJRE8          | ☑        | ☑        | ☑        | ☑   
 Ubuntu14.10 + OpenJDK7           | ☑        | ☑        | ☑        | ☑       | -       | -               | -       
 Windows XP + Oracle JVM 7        | ☑        | -        | ☑        | ☑       | ☑       | ☑               | -       
 MacOSX + OracleJRE8              | ☑        | -        | ☑        | ☑       | -       | -               | ☑       
-Ubuntu14.04+tilingWindowMgr+OracleJVM7| ☑        | ☑[*](1)  | ☑        | ☑       | -       | -               | -       
+Ubuntu14.04+tilingWindowMgr+OracleJVM7| ☑        | ☑[*](#22)  | ☑        | ☑       | -       | -               | -       
 `TODO`: More Windows versions    | -        | -        | -        | -       | -       | -               | -
 
 #### How to test
@@ -41,5 +41,3 @@ on the top. Append your report to [this issue](https://github.com/UprootLabs/swi
 Copyright 2014 Uproot Labs India
 
 Distributed under the [Apache v2 License](https://www.apache.org/licenses/LICENSE-2.0.html)
-
-  [1]: https://github.com/UprootLabs/swing-htabs/issues/22
