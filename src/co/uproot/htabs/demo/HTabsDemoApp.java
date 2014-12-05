@@ -167,14 +167,18 @@ public class HTabsDemoApp {
     newSiblingBtn.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
-        updateStatus(status, "New sibling added");
         final Tab currTab = tabManager.getActiveTab();
-        final String title = "New sibling added by " + currTab.getTabTitle();
-        final int colorIndex = 3;
-        final ReferenceCustomTabComponent customTabComponent = new ReferenceCustomTabComponent(title, new DummyIcon(COLORS[colorIndex]));
-        final JPanel tabContent = new DemoTabContentPane(title, colorIndex, customTabComponent);
-        currTab.addSibling(null, null, customTabComponent,
-            tabContent, null);
+        if (currTab != null) {
+          updateStatus(status, "New sibling added");
+          final String title = "New sibling added by " + currTab.getTabTitle();
+          final int colorIndex = 3;
+          final ReferenceCustomTabComponent customTabComponent = new ReferenceCustomTabComponent(title, new DummyIcon(COLORS[colorIndex]));
+          final JPanel tabContent = new DemoTabContentPane(title, colorIndex, customTabComponent);
+          currTab.addSibling(null, null, customTabComponent,
+              tabContent, null);
+        } else {
+          updateStatus(status, "Sibilng could not be added as there are no tabs");
+        }
       }
     });
 
@@ -182,14 +186,18 @@ public class HTabsDemoApp {
     newChildBtn.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
-        updateStatus(status, "New child added");
         final Tab parent = tabManager.getActiveTab();
-        final String title = "New Child Tab added by " + parent.getTabTitle();
-        final int colorIndex = 6;
-        final ReferenceCustomTabComponent customTabComponent = new ReferenceCustomTabComponent(title, new DummyIcon(COLORS[colorIndex]));
-        final JPanel tabContent = new DemoTabContentPane(title, colorIndex, customTabComponent);
-        parent.addChild(null, null, customTabComponent,
-            tabContent, title);
+        if (parent != null) {
+          updateStatus(status, "New child added");
+          final String title = "New Child Tab added by " + parent.getTabTitle();
+          final int colorIndex = 6;
+          final ReferenceCustomTabComponent customTabComponent = new ReferenceCustomTabComponent(title, new DummyIcon(COLORS[colorIndex]));
+          final JPanel tabContent = new DemoTabContentPane(title, colorIndex, customTabComponent);
+          parent.addChild(null, null, customTabComponent,
+              tabContent, title);
+        } else {
+          updateStatus(status, "New Child could not be added as there are no tabs");
+        }
       }
     });
 
