@@ -66,7 +66,7 @@ public class DemoTabContentPane extends JPanel {
         if (updatedTitle.length() == 0) {
           updatedTitle = "Default Title";
         }
-        customTabComponent.setTitle(updatedTitle);
+        customTabComponent.setText(updatedTitle);
         contentPaneTitle.setText("<html><center>Content of tab<p><big><b>" + updatedTitle + "</b></big></p></center></html>");
       }
 

@@ -16,40 +16,14 @@
 
 package co.uproot.htabs.demo.components;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
-public class ReferenceCustomTabComponent extends JPanel {
-  private final JLabel titleLabel;
+public class ReferenceCustomTabComponent extends JLabel {
 
   public ReferenceCustomTabComponent(final String title, final Icon icon) {
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-    setOpaque(false);
-
-    final JLabel label = new JLabel(title);
-    label.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
-    label.setIcon(icon);
-    titleLabel = label;
-    add(label);
-  }
-
-  public String getTitle() {
-    return titleLabel.getText();
-  }
-
-  public void setTitle(final String newTitle) {
-    titleLabel.setText(newTitle);
-  }
-
-  public Icon getIcon() {
-    return titleLabel.getIcon();
-  }
-
-  public void setIcon(final Icon newIcon) {
-    titleLabel.setIcon(newIcon);
+    super(title);
+    setIcon(icon);
   }
 
 }
