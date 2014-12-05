@@ -157,8 +157,9 @@ public class HTabsDemoApp {
         updateStatus(status, "New tab added");
         final String title = "New Tab";
         final int colorIndex = 7;
-        final JPanel tabContent = new DemoTabContentPane(title, colorIndex, tabManager);
-        tabManager.addTab(new ReferenceCustomTabComponent(title, new DummyIcon(COLORS[colorIndex])), tabContent);
+        final ReferenceCustomTabComponent customTabComponent = new ReferenceCustomTabComponent(title, new DummyIcon(COLORS[colorIndex]));
+        final JPanel tabContent = new DemoTabContentPane(title, colorIndex, customTabComponent);
+        tabManager.addTab(customTabComponent, tabContent);
       }
     });
 
@@ -170,8 +171,9 @@ public class HTabsDemoApp {
         final Tab currTab = tabManager.getActiveTab();
         final String title = "New sibling added by " + currTab.getTabTitle();
         final int colorIndex = 3;
-        final JPanel tabContent = new DemoTabContentPane(title, colorIndex, tabManager);
-        currTab.addSibling(null, null, new ReferenceCustomTabComponent(title, new DummyIcon(COLORS[colorIndex])),
+        final ReferenceCustomTabComponent customTabComponent = new ReferenceCustomTabComponent(title, new DummyIcon(COLORS[colorIndex]));
+        final JPanel tabContent = new DemoTabContentPane(title, colorIndex, customTabComponent);
+        currTab.addSibling(null, null, customTabComponent,
             tabContent, null);
       }
     });
@@ -184,8 +186,9 @@ public class HTabsDemoApp {
         final Tab parent = tabManager.getActiveTab();
         final String title = "New Child Tab added by " + parent.getTabTitle();
         final int colorIndex = 6;
-        final JPanel tabContent = new DemoTabContentPane(title, colorIndex, tabManager);
-        parent.addChild(null, null, new ReferenceCustomTabComponent(title, new DummyIcon(COLORS[colorIndex])),
+        final ReferenceCustomTabComponent customTabComponent = new ReferenceCustomTabComponent(title, new DummyIcon(COLORS[colorIndex]));
+        final JPanel tabContent = new DemoTabContentPane(title, colorIndex, customTabComponent);
+        parent.addChild(null, null, customTabComponent,
             tabContent, title);
       }
     });
@@ -235,14 +238,16 @@ public class HTabsDemoApp {
       final int prevTab = random.nextInt(i + 1);
       if (root || (prevTab == i)) {
         final String title = "Tab " + i;
-        final JPanel tabContent = new DemoTabContentPane(title, colorIndex, tabManager);
-        final Tab tab = tabManager.addTab(new ReferenceCustomTabComponent(title, icon), tabContent);
+        final ReferenceCustomTabComponent customTabComponent = new ReferenceCustomTabComponent(title, icon);
+        final JPanel tabContent = new DemoTabContentPane(title, colorIndex, customTabComponent);
+        final Tab tab = tabManager.addTab(customTabComponent, tabContent);
         tab.setTabTitle(title);
         tabs[i] = tab;
       } else {
         final String title = "Tab " + i + " [child of " + prevTab + "]";
-        final JPanel tabContent = new DemoTabContentPane(title, colorIndex, tabManager);
-        final Tab tab = tabs[prevTab].addChild(new ReferenceCustomTabComponent(title, icon), tabContent);
+        final ReferenceCustomTabComponent customTabComponent = new ReferenceCustomTabComponent(title, icon);
+        final JPanel tabContent = new DemoTabContentPane(title, colorIndex, customTabComponent);
+        final Tab tab = tabs[prevTab].addChild(customTabComponent, tabContent);
         tab.setTabTitle(title);
         tabs[i] = tab;
       }

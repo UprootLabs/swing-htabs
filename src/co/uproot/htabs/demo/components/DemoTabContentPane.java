@@ -20,7 +20,6 @@ import static co.uproot.htabs.demo.HTabsDemoApp.COLORS;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -30,7 +29,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
-import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -39,16 +37,10 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import co.uproot.htabs.tabmanager.TabManager;
-import co.uproot.htabs.tabmanager.TabManager.Tab;
-
 public class DemoTabContentPane extends JPanel {
 
-  final private TabManager tabManager;
-
-  public DemoTabContentPane(final String tabTitle, final int colorIndex, final TabManager tabManager) {
+  public DemoTabContentPane(final String tabTitle, final int colorIndex, final ReferenceCustomTabComponent customTabComponent) {
     setLayout(new GridBagLayout());
-    this.tabManager = tabManager;
 
     final GridBagConstraints c = new GridBagConstraints();
 
@@ -74,7 +66,7 @@ public class DemoTabContentPane extends JPanel {
         if (updatedTitle.length() == 0) {
           updatedTitle = "Default Title";
         }
-        changeTabTitle(getReferenceCustomTabComponent(tabManager), updatedTitle);
+        customTabComponent.setTitle(updatedTitle);
         contentPaneTitle.setText("<html><center>Content of tab<p><big><b>" + updatedTitle + "</b></big></p></center></html>");
       }
 
@@ -105,13 +97,13 @@ public class DemoTabContentPane extends JPanel {
     tabColorPickerPanel.setBorder(new TitledBorder(BorderFactory.createLineBorder(Color.black), "Icon"));
     final JLabel colorTitle = new JLabel("Choose Icon");
     tabColorPickerPanel.add(colorTitle, BorderLayout.PAGE_START);
-    tabColorPickerPanel.add(createColorPicker(colorIndex, this.tabManager), BorderLayout.CENTER);
+    tabColorPickerPanel.add(createColorPicker(colorIndex, customTabComponent), BorderLayout.CENTER);
     c.gridy = 3;
     add(tabColorPickerPanel, c);
 
   }
 
-  private static JPanel createColorPicker(final int color, final TabManager tabManager) {
+  private static JPanel createColorPicker(final int color, final ReferenceCustomTabComponent customTabComponent) {
     final ButtonGroup colorGroup = new ButtonGroup();
     final JPanel colorPicker = new JPanel();
     colorPicker.setLayout(new GridLayout(3, 3));
@@ -131,7 +123,7 @@ public class DemoTabContentPane extends JPanel {
         public void actionPerformed(final ActionEvent e) {
           final JRadioButton colorButton = (JRadioButton) e.getSource();
           final int colorIndex = Integer.parseInt(colorButton.getText());
-          changeTabIcon(getReferenceCustomTabComponent(tabManager), new ColoredIcon(COLORS[colorIndex]));
+          customTabComponent.setIcon(new ColoredIcon(COLORS[colorIndex]));
         }
       });
       colorRadioButton.add(colorButton, BorderLayout.LINE_START);
@@ -140,31 +132,6 @@ public class DemoTabContentPane extends JPanel {
       colorGroup.add(colorButton);
     }
     return colorPicker;
-  }
-
-  private static ReferenceCustomTabComponent getReferenceCustomTabComponent(final TabManager tabManager) {
-    final Tab tab = tabManager.getActiveTab();
-    final Component tabComponent = tab.getTabComponent();
-    if (tabComponent instanceof ReferenceCustomTabComponent) {
-      return (ReferenceCustomTabComponent) tabComponent;
-    }
-    return null;
-  };
-
-  private static void changeTabTitle(final ReferenceCustomTabComponent customComponent, final String title) {
-    if (customComponent == null) {
-      System.err.println("Custom tab component not recognized");
-    } else {
-      customComponent.setTitle(title);
-    }
-  }
-
-  private static void changeTabIcon(final ReferenceCustomTabComponent customComponent, final Icon icon) {
-    if (customComponent == null) {
-      System.err.println("Custom tab component not recognized");
-    } else {
-      customComponent.setIcon(icon);
-    }
   }
 
 }
