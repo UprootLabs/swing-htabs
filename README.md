@@ -28,7 +28,7 @@ Ubuntu14.x + OracleJRE8          | ☑        | ☑        | ☑        | ☑   
 Ubuntu14.10 + OpenJDK7           | ☑        | ☑        | ☑        | ☑       | -       | -               | -       
 Windows XP + Oracle JVM 7        | ☑        | -        | ☑        | ☑       | ☑       | ☑               | -       
 MacOSX + OracleJRE8              | ☑        | -        | ☑        | ☑       | -       | -               | ☑       
-Ubuntu14.04+tilingWindowMgr+OracleJVM7| ☑        | ☑[*](#22)  | ☑        | ☑       | -       | -               | -       
+Ubuntu14.04+tilingWindowMgr+OracleJVM7| ☑        | ☑[issue](https://github.com/UprootLabs/swing-htabs/issues/22)  | ☑        | ☑       | -       | -               | -       
 `TODO`: More Windows versions    | -        | -        | -        | -       | -       | -               | -
 
 #### How to test
