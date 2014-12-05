@@ -269,15 +269,6 @@ public class HTabsDemoApp {
     f.setVisible(true);
   }
 
-  private static JPanel createTabContent(final String text) {
-    final JLabel label = new JLabel(text);
-    label.setHorizontalAlignment(SwingConstants.CENTER);
-    final JPanel wrapper = new JPanel();
-    wrapper.setLayout(new BorderLayout());
-    wrapper.add(label, BorderLayout.CENTER);
-    return wrapper;
-  }
-
   private static void createLAFButtons(final int lafIndex, final JFrame f, final JPanel radioPanel) {
     final ButtonGroup bGroup = new ButtonGroup();
     for (int i = 0; i < lafs.length; i++) {
