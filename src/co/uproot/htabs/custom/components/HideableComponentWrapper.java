@@ -14,7 +14,7 @@
    limitations under the License.
  */
 
-package co.uproot.htabs.custom.custom.components;
+package co.uproot.htabs.custom.components;
 
 import java.awt.CardLayout;
 import java.awt.Component;
