@@ -33,6 +33,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -56,8 +58,9 @@ public class DemoTabContentPane extends JPanel {
 
     final JPanel tabTitleEditorPanel = new JPanel();
     tabTitleEditorPanel.setLayout(new BorderLayout());
-    tabTitleEditorPanel.setBorder(new TitledBorder(BorderFactory.createLineBorder(Color.black), "Title"));
-    final JLabel title = new JLabel("Edit title");
+
+    tabTitleEditorPanel.setBorder(createTitleBorder("Title"));
+
     final JTextField tabTitleEditor = new JTextField(tabTitle);
     tabTitleEditor.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -85,7 +88,6 @@ public class DemoTabContentPane extends JPanel {
         updateTitle();
       }
     });
-    tabTitleEditorPanel.add(title, BorderLayout.PAGE_START);
     tabTitleEditorPanel.add(tabTitleEditor, BorderLayout.CENTER);
     c.gridx = 1;
     c.gridy = 2;
@@ -94,13 +96,19 @@ public class DemoTabContentPane extends JPanel {
 
     final JPanel tabColorPickerPanel = new JPanel();
     tabColorPickerPanel.setLayout(new BorderLayout());
-    tabColorPickerPanel.setBorder(new TitledBorder(BorderFactory.createLineBorder(Color.black), "Icon"));
-    final JLabel colorTitle = new JLabel("Choose Icon");
-    tabColorPickerPanel.add(colorTitle, BorderLayout.PAGE_START);
+    tabColorPickerPanel.setBorder(createTitleBorder("Icon"));
     tabColorPickerPanel.add(createColorPicker(colorIndex, customTabComponent), BorderLayout.CENTER);
     c.gridy = 3;
     add(tabColorPickerPanel, c);
 
+  }
+
+  private static Border createTitleBorder(final String headingText) {
+    final Border titlePanelBorder = BorderFactory.createCompoundBorder(
+        new TitledBorder(BorderFactory.createLineBorder(Color.gray), headingText),
+        new EmptyBorder(20, 20, 20, 20)
+      );
+    return titlePanelBorder;
   }
 
   private static JPanel createColorPicker(final int color, final ReferenceCustomTabComponent customTabComponent) {
@@ -110,6 +118,7 @@ public class DemoTabContentPane extends JPanel {
     for (int index = 0; index < COLORS.length; index++) {
       final JPanel colorRadioButton = new JPanel();
       colorRadioButton.setLayout(new BorderLayout());
+      colorRadioButton.setBorder(new EmptyBorder(20, 0, 20, 0));
 
       final JLabel iconLabel = new JLabel();
       iconLabel.setIcon(new ColoredIcon(COLORS[index]));
@@ -126,6 +135,7 @@ public class DemoTabContentPane extends JPanel {
           customTabComponent.setIcon(new ColoredIcon(COLORS[colorIndex]));
         }
       });
+      colorButton.setBorder(new EmptyBorder(0, 10, 0, 10));
       colorRadioButton.add(colorButton, BorderLayout.LINE_START);
       colorRadioButton.add(iconLabel, BorderLayout.CENTER);
       colorPicker.add(colorRadioButton);
