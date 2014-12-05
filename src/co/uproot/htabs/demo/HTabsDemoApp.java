@@ -51,11 +51,25 @@ import javax.swing.event.ChangeListener;
 
 import co.uproot.htabs.custom.tabbedpane.CustomTabbedPane;
 import co.uproot.htabs.demo.components.ColoredIcon;
+import co.uproot.htabs.demo.components.DemoTabContentPane;
 import co.uproot.htabs.demo.components.DummyIcon;
+import co.uproot.htabs.demo.components.ReferenceCustomTabComponent;
 import co.uproot.htabs.tabmanager.TabManager;
 import co.uproot.htabs.tabmanager.TabManager.Tab;
 
 public class HTabsDemoApp {
+
+  final public static Color COLORS[] = new Color[] {
+      new Color(10, 10, 10, 190),
+      new Color(10, 10, 250, 190),
+      new Color(10, 250, 10, 190),
+      new Color(10, 250, 250, 190),
+      new Color(250, 10, 10, 190),
+      new Color(250, 10, 250, 190),
+      new Color(250, 250, 10, 190),
+      new Color(250, 250, 250, 190),
+      new Color(90, 25, 250, 190),
+  };
 
   final private static LookAndFeelInfo lafs[] = UIManager.getInstalledLookAndFeels();
   private static int systemLafIndex = -1;
@@ -141,7 +155,11 @@ public class HTabsDemoApp {
       @Override
       public void actionPerformed(final ActionEvent e) {
         updateStatus(status, "New tab added");
-        tabManager.addTab("New Tab", new DummyIcon(), createTabContent("new top level tab"));
+        final String title = "New Tab";
+        final int colorIndex = 7;
+        final ReferenceCustomTabComponent customTabComponent = new ReferenceCustomTabComponent(title, new DummyIcon(COLORS[colorIndex]));
+        final JPanel tabContent = new DemoTabContentPane(title, colorIndex, customTabComponent);
+        tabManager.addTab(customTabComponent, tabContent);
       }
     });
 
@@ -151,8 +169,12 @@ public class HTabsDemoApp {
       public void actionPerformed(final ActionEvent e) {
         updateStatus(status, "New sibling added");
         final Tab currTab = tabManager.getActiveTab();
-        currTab.addSibling("New Sibling Tab", new DummyIcon(), null,
-            createTabContent("new sibling added by " + currTab.getTabTitle()), null);
+        final String title = "New sibling added by " + currTab.getTabTitle();
+        final int colorIndex = 3;
+        final ReferenceCustomTabComponent customTabComponent = new ReferenceCustomTabComponent(title, new DummyIcon(COLORS[colorIndex]));
+        final JPanel tabContent = new DemoTabContentPane(title, colorIndex, customTabComponent);
+        currTab.addSibling(null, null, customTabComponent,
+            tabContent, null);
       }
     });
 
@@ -162,8 +184,12 @@ public class HTabsDemoApp {
       public void actionPerformed(final ActionEvent e) {
         updateStatus(status, "New child added");
         final Tab parent = tabManager.getActiveTab();
-        final String title = "added by " + parent.getTabTitle();
-        parent.addChild("New Child tab", new DummyIcon(), createTabContent("New Child Tab " + title), title);
+        final String title = "New Child Tab added by " + parent.getTabTitle();
+        final int colorIndex = 6;
+        final ReferenceCustomTabComponent customTabComponent = new ReferenceCustomTabComponent(title, new DummyIcon(COLORS[colorIndex]));
+        final JPanel tabContent = new DemoTabContentPane(title, colorIndex, customTabComponent);
+        parent.addChild(null, null, customTabComponent,
+            tabContent, title);
       }
     });
 
@@ -201,28 +227,29 @@ public class HTabsDemoApp {
     topBar.add(configButtons, BorderLayout.CENTER);
     topBar.add(newTabButtons, BorderLayout.EAST);
 
-    final Color colors[] = new Color[] {
-        new Color(10, 10, 10, 190),
-        new Color(10, 10, 250, 190),
-        new Color(250, 10, 250, 190),
-        new Color(250, 10, 10, 190),
-        new Color(10, 250, 10, 190),
-        new Color(10, 250, 250, 190),
-        new Color(90, 25, 250, 190),
-    };
     final int numTabs = 15;
     final Tab tabs[] = new Tab[numTabs];
     final Random random = new Random(0);
     for (int i = 0; i < numTabs; i++) {
-      final Color color = colors[i % colors.length];
+      final int colorIndex = i % COLORS.length;
+      final Color color = COLORS[colorIndex];
       final ColoredIcon icon = new ColoredIcon(color);
       final boolean root = random.nextDouble() > 0.7d;
       final int prevTab = random.nextInt(i + 1);
-      final JPanel tabContent = createTabContent("<html><center>Content of tab<p><big><b>" + i + "</b></big></p></center></html>");
       if (root || (prevTab == i)) {
-        tabs[i] = tabManager.addTab("Tab " + i, icon, tabContent);
+        final String title = "Tab " + i;
+        final ReferenceCustomTabComponent customTabComponent = new ReferenceCustomTabComponent(title, icon);
+        final JPanel tabContent = new DemoTabContentPane(title, colorIndex, customTabComponent);
+        final Tab tab = tabManager.addTab(customTabComponent, tabContent);
+        tab.setTabTitle(title);
+        tabs[i] = tab;
       } else {
-        tabs[i] = tabs[prevTab].addChild("Tab " + i + " [child of " + prevTab + "]", icon, tabContent);
+        final String title = "Tab " + i + " [child of " + prevTab + "]";
+        final ReferenceCustomTabComponent customTabComponent = new ReferenceCustomTabComponent(title, icon);
+        final JPanel tabContent = new DemoTabContentPane(title, colorIndex, customTabComponent);
+        final Tab tab = tabs[prevTab].addChild(customTabComponent, tabContent);
+        tab.setTabTitle(title);
+        tabs[i] = tab;
       }
     }
 
