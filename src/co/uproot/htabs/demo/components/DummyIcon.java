@@ -21,7 +21,6 @@
 
 package co.uproot.htabs.demo.components;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
@@ -32,20 +31,20 @@ import javax.swing.Icon;
 public class DummyIcon implements Icon {
   private final int width = 16;
   private final int height = 16;
+  private final Color color;
 
-  private final BasicStroke stroke = new BasicStroke(2);
+  public DummyIcon(final Color color) {
+    this.color = color;
+  }
 
   public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
     final Graphics2D g2d = (Graphics2D) g.create();
 
-    g2d.setColor(Color.ORANGE);
+    g2d.setColor(color.darker().darker());
+    g2d.fillRect(0, 0, width, height);
 
-    g2d.setStroke(stroke);
-
-    final int wb2 = (width / 2);
-    final int hb2 = (height / 2);
-    final int size = 3;
-    g2d.fillRect(wb2 - size, hb2 - size, wb2 + size, hb2 + size);
+    g2d.setColor(color);
+    g2d.fillRect(3, 3, width - 6, height - 6);
 
     g2d.dispose();
   }

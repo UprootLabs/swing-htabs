@@ -41,10 +41,8 @@ import java.util.List;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
@@ -117,6 +115,10 @@ public class TabManager {
 
   public Tab addTab(final Component tabContentPane) {
     return addTab(null, null, null, tabContentPane, null);
+  }
+
+  public Tab addTab(final Component tabComponent, final Component tabContentPane) {
+    return addTab(null, null, tabComponent, tabContentPane, null);
   }
 
   public Tab addTab(final Component tabContentPane, final int index) {
@@ -258,17 +260,17 @@ public class TabManager {
 
     private static final long serialVersionUID = 1L;
     private final CollapseButton collapseButton;
-    private final Component tabComponent;
+    private Component wrappedComponent;
     private final HideableComponentWrapper hideableComponentWraper;
     private boolean collapsed;
     private static final int MARGIN_VERT = 4;
     private static final int MARGIN_LEFT = 8;
 
-    public TabComponentWrappingContainer(final Component tabComponenet) {
+    public TabComponentWrappingContainer(final Component componenet) {
       setLayout(new BorderLayout(MARGIN, 0));
-      this.collapseButton = new CollapseButton();
-      this.hideableComponentWraper = new HideableComponentWrapper(this.collapseButton, false);
-      this.tabComponent = tabComponenet;
+      collapseButton = new CollapseButton();
+      hideableComponentWraper = new HideableComponentWrapper(collapseButton, false);
+      wrappedComponent = componenet;
 
       addAncestorListener(new AncestorListener() {
 
@@ -280,7 +282,7 @@ public class TabManager {
           } else {
             setBorder(BorderFactory.createEmptyBorder(MARGIN_VERT, indent, MARGIN_VERT, 0));
           }
-          tabComponenet.setPreferredSize(new Dimension(TAB_BAR_WIDTH - indent, tabComponenet.getPreferredSize().height));
+          componenet.setPreferredSize(new Dimension(TAB_BAR_WIDTH - indent, componenet.getPreferredSize().height));
         }
 
         @Override
@@ -300,7 +302,7 @@ public class TabManager {
       });
       setOpaque(false);
       add(this.hideableComponentWraper, BorderLayout.WEST);
-      add(tabComponenet, BorderLayout.CENTER);
+      add(wrappedComponent, BorderLayout.CENTER);
       add(new CloseButton(), BorderLayout.EAST);
     }
 
@@ -313,7 +315,16 @@ public class TabManager {
     }
 
     public Component getTabComponent() {
-      return this.tabComponent;
+      return this.wrappedComponent;
+    }
+
+    public void setTabComponent(final Component component) {
+      remove(wrappedComponent);
+      wrappedComponent = component;
+      add(wrappedComponent, BorderLayout.CENTER);
+      final int indent = getComponentIndent() + MARGIN_LEFT;
+      wrappedComponent.setPreferredSize(new Dimension(TAB_BAR_WIDTH - indent, component.getPreferredSize().height));
+      repaint();
     }
 
     public JButton getCollapseButton() {
@@ -550,7 +561,7 @@ public class TabManager {
   public class Tab {
     private Tab parent;
     final private ArrayList<Tab> children;
-    private TabComponentWrappingContainer tabComponent;
+    private final TabComponentWrappingContainer tabComponent;
     private Component tabContentPane;
     private String tabTitle;
     private Icon tabIcon;
@@ -562,25 +573,7 @@ public class TabManager {
         final String toolTip, final Tab parent) {
       this.tabTitle = tabTitle;
       this.tabIcon = tabIcon;
-
-      if (tabComponent == null) {
-        final JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-        panel.setOpaque(false);
-
-        final JLabel iconLabel = new JLabel();
-        iconLabel.setIcon(tabIcon);
-        panel.add(iconLabel);
-
-        final JLabel label = new JLabel(tabTitle);
-        label.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
-        panel.add(label);
-
-        this.tabComponent = new TabComponentWrappingContainer(panel);
-      } else {
-        this.tabComponent = new TabComponentWrappingContainer(tabComponent);
-      }
-
+      this.tabComponent = new TabComponentWrappingContainer(tabComponent);
       this.tabContentPane = tabContentPane;
       this.toolTip = toolTip;
       this.parent = parent;
@@ -633,8 +626,8 @@ public class TabManager {
       return this.tabComponent;
     }
 
-    public void setTabComponent(final Component tabComponent) {
-      this.tabComponent = new TabComponentWrappingContainer(tabComponent);
+    public void setTabComponent(final Component component) {
+      this.tabComponent.setTabComponent(component);
     }
 
     public Component getTabContentPane() {
