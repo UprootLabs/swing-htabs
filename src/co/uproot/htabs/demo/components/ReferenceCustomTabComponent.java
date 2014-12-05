@@ -24,19 +24,14 @@ import javax.swing.JPanel;
 
 public class ReferenceCustomTabComponent extends JPanel {
   private final JLabel titleLabel;
-  private final JLabel iconLabel;
 
   public ReferenceCustomTabComponent(final String title, final Icon icon) {
     setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
     setOpaque(false);
 
-    final JLabel iconLabel = new JLabel();
-    iconLabel.setIcon(icon);
-    this.iconLabel = iconLabel;
-    add(iconLabel);
-
     final JLabel label = new JLabel(title);
     label.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+    label.setIcon(icon);
     titleLabel = label;
     add(label);
   }
@@ -50,11 +45,11 @@ public class ReferenceCustomTabComponent extends JPanel {
   }
 
   public Icon getIcon() {
-    return iconLabel.getIcon();
+    return titleLabel.getIcon();
   }
 
   public void setIcon(final Icon newIcon) {
-    iconLabel.setIcon(newIcon);
+    titleLabel.setIcon(newIcon);
   }
 
 }

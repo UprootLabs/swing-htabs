@@ -261,16 +261,16 @@ public class TabManager {
     private static final long serialVersionUID = 1L;
     private final CollapseButton collapseButton;
     private Component wrappedComponent;
-    private final HideableComponentWrapper hideableComponentWraper;
+    private final HideableComponentWrapper hideableComponentWrapper;
     private boolean collapsed;
     private static final int MARGIN_VERT = 4;
     private static final int MARGIN_LEFT = 8;
 
-    public TabComponentWrappingContainer(final Component componenet) {
+    public TabComponentWrappingContainer(final Component component) {
       setLayout(new BorderLayout(MARGIN, 0));
       collapseButton = new CollapseButton();
-      hideableComponentWraper = new HideableComponentWrapper(collapseButton, false);
-      wrappedComponent = componenet;
+      hideableComponentWrapper = new HideableComponentWrapper(collapseButton, false);
+      wrappedComponent = component;
 
       addAncestorListener(new AncestorListener() {
 
@@ -282,7 +282,7 @@ public class TabManager {
           } else {
             setBorder(BorderFactory.createEmptyBorder(MARGIN_VERT, indent, MARGIN_VERT, 0));
           }
-          componenet.setPreferredSize(new Dimension(TAB_BAR_WIDTH - indent, componenet.getPreferredSize().height));
+          component.setPreferredSize(new Dimension(TAB_BAR_WIDTH - indent, component.getPreferredSize().height));
         }
 
         @Override
@@ -301,7 +301,7 @@ public class TabManager {
         }
       });
       setOpaque(false);
-      add(this.hideableComponentWraper, BorderLayout.WEST);
+      add(this.hideableComponentWrapper, BorderLayout.WEST);
       add(wrappedComponent, BorderLayout.CENTER);
       add(new CloseButton(), BorderLayout.EAST);
     }
@@ -332,22 +332,22 @@ public class TabManager {
     }
 
     public Component getHideableComponentWrapper() {
-      return this.hideableComponentWraper;
+      return this.hideableComponentWrapper;
     }
 
     public void showCollapseButton() {
       final int placement = tabbedPane.getTabPlacement();
       if (placement == SwingConstants.LEFT) {
-        this.hideableComponentWraper.showComponent();
+        this.hideableComponentWrapper.showComponent();
       }
     }
 
     public void hideCollapseButton() {
       final int placement = tabbedPane.getTabPlacement();
       if (placement == SwingConstants.LEFT) {
-        this.hideableComponentWraper.hideComponent();
+        this.hideableComponentWrapper.hideComponent();
       } else if (placement == SwingConstants.TOP) {
-        this.hideableComponentWraper.setVisible(false);
+        this.hideableComponentWrapper.setVisible(false);
       }
     }
 
@@ -359,7 +359,7 @@ public class TabManager {
         if (tab.getChildren().size() > 0) {
           showCollapseButton();
         } else {
-          this.hideableComponentWraper.setVisible(true);
+          this.hideableComponentWrapper.setVisible(true);
         }
         super.setBounds(0, y, width, height);
       } else if (placement == SwingConstants.TOP) {
